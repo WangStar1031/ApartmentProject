@@ -1,0 +1,22 @@
+table td, table th{
+	border: 1px solid #aaa;
+	margin: 0px;
+}
+.vertical-top{
+	vertical-align: text-bottom;
+}
+.selectedTr td{
+	background-color: #c3d6ff;
+}
+.partDiv{
+	padding: 5px 10px;
+	border-radius: 5px;
+	background-color: #7fc;
+	margin: 3px 5px 3px 0px;
+	display: inline-block;
+}
+.removePart{
+	color: #f00;
+	margin-left: 10px;
+	cursor: pointer;
+}

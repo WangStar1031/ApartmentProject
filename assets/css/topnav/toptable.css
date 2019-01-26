@@ -1,0 +1,142 @@
+@charset "utf-8";
+
+/* Simple fluid media
+   Note: Fluid media requires that you remove the media's height and width attributes from the HTML
+   http://www.alistapart.com/articles/fluid-images/ 
+*/
+
+img, object, embed, video {
+
+	max-width: 100%;
+
+}
+
+/* IE 6 does not support max-width so default to width 100% */
+
+.ie6 img {
+	width:100%;
+}
+
+
+
+html.loading #hideonload {
+		opacity: 0;
+		   -moz-transition: opacity 0.3s ease-out;
+		     -o-transition: opacity 0.3s ease-out;
+		-webkit-transition: opacity 0.3s ease-out;
+		    -ms-transition: opacity 0.3s ease-out;
+		transition: opacity 0.3s ease-out
+
+	}
+
+	html.loading:after {
+
+		content: 'Loading...';
+		display: block;
+		line-height: 1em;
+		margin-top: -.5em;
+		position: absolute;
+		text-align: center;
+		top: 50%;
+		width: 100%;
+
+	}
+
+
+/*
+	Dreamweaver Fluid Grid Properties
+	----------------------------------
+
+	dw-num-cols-mobile:		8;
+	dw-num-cols-tablet:		12;
+	dw-num-cols-desktop:	16;
+	dw-gutter-percentage:	25;
+
+	Inspiration from "Responsive Web Design" by Ethan Marcotte 
+	http://www.alistapart.com/articles/responsive-web-design
+	and Golden Grid System by Joni Korpi
+	http://goldengridsystem.com/
+
+*/
+
+
+
+/* Mobile Layout: 480px and below. */
+
+
+
+header .table-2 { width: 99.8%; margin-left: 0.2%;}
+
+header .row-2_1 { height: auto; }
+
+header .cell-2_1 { border-left: 1px solid #333333; border-right: 1px solid #333333; border-top: 1px solid #333333; vertical-align:middle; text-align:right; padding-right: 20px;}
+
+header .row-2_2 { height: auto; }
+
+header .cell-2_2 { border-left: 1px solid #333333; border-right: 1px solid #333333; vertical-align:middle; text-align:center; padding-top: 5px;}
+
+header .cell-2_3 { border-left: 1px solid #333333; border-right: 1px solid #333333; vertical-align:middle; text-align:center; padding-top: 5px;}
+
+header .table-3 { width: 99.8%; margin-left: 0.2%; margin-bottom: 3px;}
+
+header .row-3 { height: 60px; }
+
+header .cell-3 { border: 1px solid #333333; vertical-align:middle; padding-top: 5px;}
+
+header .family-name { font-size: 15px; }
+
+header .family-title { font-size: 11px; }
+
+header .cell-2_1-title { font-size: 11px; }
+
+header .cell-2_2-title { display: block; font-size: 15px; margin-top: -16px; }
+
+header .cell-2_2-subtitle { display: block; font-size: 11px; margin-top: -16px; }
+
+header .cand-name { font-size: 16px; }
+
+header .cand-title { font-size: 14px; line-height: 31px;}
+
+header .cand-interior { border-bottom: 0.05em solid #333;}
+
+header h1 { position: relative; display: inline-block; margin: 0; font-weight: bold; font-size: 80px; line-height: 1; }
+
+
+
+/* Tablet Layout: 481px to 768px. Inherits styles from: Mobile Layout. */
+
+@media only screen and (min-width: 481px) {
+
+}
+
+
+
+/* Desktop Layout: 769px to a max of 1599px.  Inherits styles from: Mobile Layout and Tablet Layout. */
+
+@media only screen and (min-width: 769px) and (max-width: 1599px) {
+
+header .cell-2_2-title { font-size: 20px; margin-top: -16px; }
+
+header .cell-2_2-subtitle { font-size: 12px; margin-top: -16px; }
+
+header .family-name { font-size: 20px; }
+
+header .family-title { font-size: 14px; }
+
+
+}
+
+
+/* Desktop Layout: from 1600px.  Inherits styles from: Mobile Layout and Tablet Layout. */
+
+@media only screen and (min-width: 1600px) {
+
+header .cell-2_2-title { font-size: 24px; margin-top: -16px; }
+
+header .cell-2_2-subtitle { font-size: 14px; margin-top: -16px; }
+
+header .family-name { font-size: 24px; }
+
+header .family-title { font-size: 14px; }
+
+}
