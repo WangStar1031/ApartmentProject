@@ -1,9 +1,22 @@
 <?php
+session_start();
+// print_r($_SESSION['reparationUserName']);
+
+if( !isset($_SESSION['reparationUserName'])){
+	header("Location: login.php");
+}
+if( $_SESSION['reparationUserName'] == ""){
+	header("Location: login.php");
+}
+if( strcasecmp($_SESSION['reparationUserName'], "admin") != 0){
+	header("Location: main.php");
+}
+
 $dir = __DIR__ . "/container/";
 $files = glob($dir . "ap*");
 // print_r($files);
 $count = count($files);
-require_once "libInformation.php";
+require_once __DIR__ . "/libInformation.php";
 $projectInfo = getProjectInfo();
 
 foreach ($files as $value) {
@@ -12,7 +25,9 @@ foreach ($files as $value) {
 }
 ?>
 <link rel="stylesheet" type="text/css" href="./assets/css/main/admin.css?<?=time()?>">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <input type="hidden" name="projectInfo" id="projectInfo" value='<?=$projectInfo?>'>
+<a href="logout.php"><button class="btn btn-danger" style="margin: 10px;">Log out</button></a>
 <div>
 	<table style="margin: auto;">
 		<tr>
