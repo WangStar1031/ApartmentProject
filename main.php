@@ -18,6 +18,7 @@ if( $_SESSION['reparationUserName'] == ""){
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>Photo Documentation</title>
+	<link rel="icon" type="image/png" href="assets/images/reparation_logo.png">
 
 	<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<!-- <link href="assets/css/boilerplate.css" rel="stylesheet" type="text/css"> -->
@@ -144,7 +145,7 @@ $path = dirname($_SERVER['REQUEST_URI']) . "/";
 				  
 	    </header>
 		
-		<div class="pagespan container">
+		<div class="pagespan">
 		    <div class="wrap">
 			    <div class="scrollbar">
 				    <div class="handle">
@@ -188,15 +189,18 @@ $path = dirname($_SERVER['REQUEST_URI']) . "/";
 		            <div id="reception-notes">			
 			            <div class="clear rec-title">קישור מהיר</div>
 <?php
-$dir = __DIR__ . "/container/ap" . $apartNo . "/project/plans/";
-$files = scandir($dir);
+$files = [];
+$dir = __DIR__ . "/container/project1/ap" . $apartNo . "/project/plans/";
+if( file_exists($dir)){
+	$files = scandir($dir);
+}
 $i = 0;
 foreach($files as $file){
 	if( $file == ".." || $file == ".")
 		continue;
 	$i++;
 ?>
-<div class="rec-number"><a class="plan-popup" href="#No<?=$i?>"><?=$i?><span><img src="container/ap<?=$apartNo?>/project/plans/<?=$i?>pl.jpg" /></span></a></div>
+<div class="rec-number"><a class="plan-popup" href="#No<?=$i?>"><?=$i?><span><img src="container/project1/ap<?=$apartNo?>/project/plans/<?=$i?>pl.jpg" /></span></a></div>
 <?php
 }
 
@@ -289,10 +293,10 @@ foreach($files as $file){
 	<div id="photoplan">
 		<div id="plan" onClick="MM_effectAppearFade('photo<?=$i?>', 500, 100, 0, true)">
 			<div id="hideonload">
-				<img class="desktop" src="container/ap<?=$apartNo?>/project/plans/<?=$i?>pl.jpg">
+				<img class="desktop" src="container/project1/ap<?=$apartNo?>/project/plans/<?=$i?>pl.jpg">
 			</div>
 			<div class="photo" id="photo<?=$i?>">
-				<img class="desktop" src="container/ap<?=$apartNo?>/project/photos/<?=$i?>pi.jpg" title="click to switch between photo and plan">
+				<img class="desktop" src="container/project1/ap<?=$apartNo?>/project/photos/<?=$i?>pi.jpg" title="click to switch between photo and plan">
 			</div>
 		</div>
 		<div id="dwld">
@@ -308,7 +312,7 @@ foreach($files as $file){
 				</a>
 			</div>
 			<div id="zooom" class="fright" title="zoom">
-				<a href="container/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" target="_blank">&#128270;</a>
+				<a href="container/project1/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" target="_blank">&#128270;</a>
 			</div>
 			<div id="upload-over-plan" class="fright upload-over-button" title="">
 				<span class="upload-over-button" title="photo over photo" onclick="popup(<?=$i?>, 'photo')">
@@ -389,7 +393,7 @@ foreach($files as $file){
 </style>
 <div class="uploadImgWnd" style="display: none;">
 	<div class="imgBorder">
-		<img src="container/ap<?=$apartNo?>/project/photos/1pi.jpg">
+		<img src="container/project1/ap<?=$apartNo?>/project/photos/1pi.jpg">
 		<div class="uploadedImgPan" style="position: absolute; top:10px;">
 		</div>
 		<div id="uploadedContainer" style="position: absolute; top: 10px">
@@ -607,6 +611,9 @@ function uploadedPhotoDraw(){
 		var strHtml = "";
 		var pW = $(".imgBorder").width();
 		var pH = $(".imgBorder").height();
+		$("input[name=Year]").val("");
+		$("input[name=Month]").val("");
+		$("input[name=Day]").val("");
 		for( var i = 0; i < infos.length; i++){
 			var curInfo = infos[i];
 			var xScale = pW / curInfo.posRect.parentWidth;
@@ -643,9 +650,9 @@ function uploadedPhotoDraw(){
 function popup(_id, _cat){
 	var imgPath = "";
 	if( _cat == "photo"){
-		imgPath = "container/ap" + apartNo + "/project/photos/" + _id + "pi.jpg";
+		imgPath = "container/project1/ap" + apartNo + "/project/photos/" + _id + "pi.jpg";
 	} else{
-		imgPath = "container/ap" + apartNo + "/project/plans/" + _id + "pl.jpg";
+		imgPath = "container/project1/ap" + apartNo + "/project/plans/" + _id + "pl.jpg";
 	}
 	$(".imgBorder img").eq(0).attr("src",imgPath);
 	if( $(".uploadImgWnd").is(":visible")){
@@ -674,8 +681,9 @@ function outUi(event, ui){
 	curEle.setAttribute("groupId", "");
 }
 function showImage(src, target){
-	var fr = new FileReader();	fr.onload = function(e) {
-		// console.log(e);
+	var fr = new FileReader();
+	fr.onload = function(e) {
+		console.log(e);
 		target.src = this.result;
 		var strHtml = "";
 			strHtml += '<div class="uploadedImgTitle">';
@@ -690,8 +698,17 @@ function showImage(src, target){
 		$(".uploadedImgPan").draggable();
 	};
 	src.addEventListener("change", function(){
+		var lastModifiedDate = src.files[0].lastModifiedDate;
+		var year = lastModifiedDate.getFullYear();
+		var month = lastModifiedDate.getMonth() + 1;
+		var day = lastModifiedDate.getDate();
+		$("input[name=Year]").val(year);
+		$("input[name=Month]").val(month);
+		$("input[name=Day]").val(day);
 		fr.readAsDataURL(src.files[0]);
-		console.log(src.files[0]);
+		// console.log(src.files[0]);
+		// console.log( typeof lastModifiedDate);
+		// console.log(lastModifiedDate.getFullYear());
 	});
 }
 var src = document.getElementById("img_picker");

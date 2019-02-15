@@ -1,19 +1,17 @@
 <?php
+require_once __DIR__ . "/dbManager.php";
+
+//fixallph
+//CPanelUserPassword
 function getApartmentInfo($_aptName){
 
 }
 
-function saveProjectInfo($_projectInfo){
-	$fName = __DIR__ . "/container/projectInfo.json";
-	file_put_contents($fName, json_encode($_projectInfo));
-	echo "OK";
-}
-function getProjectInfo(){
-	$fName = __DIR__ . "/container/projectInfo.json";
-	$contents = @file_get_contents($fName);
-	
-	return $contents;
-}
+// function saveProjectInfo($_projectInfo){
+// 	$fName = __DIR__ . "/container/projectInfo.json";
+// 	file_put_contents($fName, json_encode($_projectInfo));
+// 	echo "OK";
+// }
 function ImageUpload($_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_strFileType, $_posRect, $_imgSrc, $_infos){
 	$_retVal = new \stdClass;
 	$dirName = "container/ap" . $_apartNo . "/project/uploaded/";
@@ -84,4 +82,42 @@ function GetUploadedPhotos( $_apartNo, $_idxPhoto, $_catPhoto){
 	}
 	echo json_encode($retVal);
 }
+function createNewProject($_directoryName){
+	$dirName = __DIR__ . "/container/" . $_directoryName . "/";
+	if( file_exists($dirName)){
+		echo "Already Exists.";
+	} else{
+		if( mkdir($dirName, 0777)){
+			echo "OK";
+		} else{
+			echo "Can't create new project.";
+		}
+	}
+}
+function deleteDir($dirPath) {
+	if (! is_dir($dirPath)) {
+		throw new InvalidArgumentException("$dirPath must be a directory");
+	}
+	if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+		$dirPath .= '/';
+	}
+	$files = glob($dirPath . '*', GLOB_MARK);
+	foreach ($files as $file) {
+		if (is_dir($file)) {
+			deleteDir($file);
+		} else {
+			unlink($file);
+		}
+	}
+	rmdir($dirPath);
+}
+function removeProject($_directoryName){
+	$dirName = __DIR__ . "/container/" . $_directoryName . "/";
+	if( file_exists($dirName)){
+		deleteDir($dirName);
+	}
+	DeleteProject($_directoryName);
+	echo "OK";
+}
+
 ?>

@@ -7,16 +7,10 @@ switch ($_action) {
 	case 'getApartmentInfo':
 		break;
 	case 'getProjectInfo':
-		break;
-	case 'saveProjectInfo':
-		$_data = '';
-		if( isset($_GET['data']))  $_data = $_GET['data'];
-		if( isset($_POST['data'])) $_data = $_POST['data'];
-		if( $_data){
-			saveProjectInfo(json_decode($_data));
-		} else{
-			echo "No data";
-		}
+		$_projectPath = '';
+		if( isset($_GET['projectPath'])) $_projectPath = $_GET['projectPath'];
+		if( isset($_POST['projectPath'])) $_projectPath = $_POST['projectPath'];
+		echo json_encode(getProjectInfo( $_projectPath));
 		break;
 	case "imgUpload":
 		$_apartNo = '';
@@ -59,6 +53,43 @@ switch ($_action) {
 		if( isset($_GET['catPhoto'])) $_catPhoto = $_GET['catPhoto'];
 		if( isset($_POST['catPhoto'])) $_catPhoto = $_POST['catPhoto'];
 		GetUploadedPhotos( $_apartNo, $_idxPhoto, $_catPhoto);
+		break;
+	case "newProject":
+		$_directoryName = '';
+		if( isset($_GET['directoryName'])) $_directoryName = $_GET['directoryName'];
+		if( isset($_POST['directoryName'])) $_directoryName = $_POST['directoryName'];
+		createNewProject($_directoryName);
+		break;
+	case "removeProject":
+		$_directoryName = '';
+		if( isset($_GET['directoryName'])) $_directoryName = $_GET['directoryName'];
+		if( isset($_POST['directoryName'])) $_directoryName = $_POST['directoryName'];
+		removeProject($_directoryName);
+		break;
+	// case "changeProjectName":
+	// 	$_directoryName = '';
+	// 	if( isset($_GET['directoryName'])) $_directoryName = $_GET['directoryName'];
+	// 	if( isset($_POST['directoryName'])) $_directoryName = $_POST['directoryName'];
+	// 	$_projectName = '';
+	// 	if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
+	// 	if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
+	// 	ChangeProjectName( $_directoryName, $_projectName);
+	// 	break;
+	case "saveProjectName":
+		$_projectPath = '';
+		if( isset($_GET['projectPath'])) $_projectPath = $_GET['projectPath'];
+		if( isset($_POST['projectPath'])) $_projectPath = $_POST['projectPath'];
+		$_projectName = '';
+		if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
+		if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
+		saveProjectName($_projectPath, $_projectName);
+		break;
+	case "saveProjectInfo":
+		$_projectInfo = "";
+		if( isset($_GET['projectInfo'])) $_projectInfo = $_GET['projectInfo'];
+		if( isset($_POST['projectInfo'])) $_projectInfo = $_POST['projectInfo'];
+		$_objProjectInfo = json_decode($_projectInfo);
+		saveProjectInfo( $_objProjectInfo);
 		break;
 	default:
 		break;

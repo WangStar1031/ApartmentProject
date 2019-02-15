@@ -11,7 +11,7 @@ if( strcasecmp($_SESSION['reparationUserName'], "admin") != 0){
 	header("Location: main.php");
 }
 
-$dir = __DIR__ . "/container/project1/";
+$dir = __DIR__ . "/container/";
 $files = glob($dir . "ap*");
 // print_r($files);
 $count = count($files);
@@ -41,17 +41,66 @@ foreach ($files as $value) {
 	.mainTab table td, .mainTab table th{
 		padding: 5px;
 	}
-	table.nonPadding td, table.nonPadding th{
-		padding: 0px;
-	}
 </style>
 <div>
 	<div class="container">
 		<ul class="nav nav-tabs">
 			<li class="active" onclick="onTabClicked(0)"><a href="#">Project Management</a></li>
 			<li class="" onclick="onTabClicked(1)"><a href="#">User Management</a></li>
-		</ul>		
+		</ul>
+		<!-- <button class="btn btn-primary" onclick="onTabClicked(0)">Project Management</button>
+		<button class="btn " onclick="onTabClicked(1)">User Management</button> -->
+		
 		<div class="forProject mainTab">
+			<table id="tblProjects" class="table-bordered table-striped">
+				<tr>
+					<th>N<u>o</u></th>
+					<th>Directory Name</th>
+					<th>SubDir Count</th>
+					<th>Project Name</th>
+					<th>Apartment Count</th>
+					<th>Actions</th>
+				</tr>
+				<?php
+					$dir = __DIR__ . "/container/";
+					$files = scandir($dir);
+					$index = 0;
+					foreach ($files as $value) {
+						if( is_dir($dir . $value)){
+							if( $value == "." || $value == ".."){
+								continue;
+							}
+							$index++;
+							$subFiles = scandir($dir . $value);
+							$dirs = array_filter(glob($dir . $value . '/*'), 'is_dir');
+							$count = count($dirs);
+							$_infTemp = getProjectInfo($value);
+							$_projectName = "";
+							if( $_infTemp){
+								$_projectName = $_infTemp[0]['ProjectName'];
+							}
+							?>
+				<tr class="projectRow <?php if($index==1) {echo 'active';} ?>" onclick="SelectedRow(this)">
+					<td class="number"><?=$index?></td>
+					<td class="dirName"><?=$value?></td>
+					<td><?=$count?></td>
+					<td class="projectName"><?=$_projectName?></td>
+					<td></td>
+					<td>
+						<button class="btn btn-success" onclick="onSaveName(this)">Save</button>
+						<button class="btn btn-success" onclick="onEditName(this)">Edit</button>
+						<button class="btn btn-danger" onclick="onRemove(this)">Remove</button>
+					</td>
+				</tr>
+				<?php
+						}
+					}
+				?>
+			</table>
+			<br>
+			<button class="btn btn-success" onclick="InsertNewProject()">Insert New Project</button>
+			<br>
+			<br>
 			<h3>Project Information</h3>
 			<table class="table-bordered">
 				<tr>
@@ -63,17 +112,17 @@ foreach ($files as $value) {
 								<td><label for="projectType">Project Type:</label></td>
 								<td>
 									<select id="projectType" class="form-control">
-										<option class="Public">Public</option>
-										<option class="Commercial">Commercial</option>
-										<option class="Office">Office</option>
-										<option class="Residential">Residential</option>
+										<option>Public</option>
+										<option>Commercial</option>
+										<option>Office</option>
+										<option>Residential</option>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<td><label>Location : </label></td>
 								<td colspan="3">
-									<table class="nonPadding">
+									<table>
 										<tr>
 											<td>Zone</td>
 											<td>City</td>
@@ -100,12 +149,6 @@ foreach ($files as $value) {
 								<td><input type="text" class="form-control" id="worksmanager"></td>
 								<td><label>Photography : </label></td>
 								<td><input type="text" class="form-control" id="photography"></td>
-							</tr>
-							<tr>
-								<td><label>Building N<u>o</u> : </label></td>
-								<td><input type="text" class="form-control" id="buildingnumber"></td>
-								<td><label>Document Date : </label></td>
-								<td><input type="date" class="form-control" id="documentdate" value="<?= date("Y-m-d")?>"></td>
 							</tr>
 						</table>
 						<p style="text-align: right;">
@@ -179,44 +222,23 @@ foreach ($files as $value) {
 					</td>
 					<td class="vertical-top">
 						<h4>Apartment Information</h4>
-						<table>
-							<tr>
-								<td>
-									<label>Section Count : </label>
-								</td>
-								<td>
-									<input type="number" id="sectionCount" min="1" class="form-control" onchange="sectionCountChanged()">
-								</td>
-							</tr>
-						</table>
-						<p style="text-align: right;">
-							<button class="btn btn-success" onclick="openSectionImgModal()">View Section Image</button>
-						</p>
-						<table class="table-bordered table-striped" id="tblSections">
-							<tr>
-								<th>Section N<u>o</u></th>
-								<th>Image N<u>o</u></th>
-							</tr>
-						</table>
-						<br>
-						<table class="table-bordered table-striped">
-							<tr>
-								<th>N<u>o</u></th>
-								<th>Part Name</th>
-								<th>Image N<u>o</u></th>
-								<!-- <th>End Number</th> -->
-							</tr>
-						</table>
-						<br>
+						<label>Address : </label>
+						<input type="text" name="address">
 						<p style="text-align: right;">
 							<button class="btn btn-success" style="vertical-align: bottom;">Save Apartment Info</button>
 						</p>
+						<table class="table-bordered table-striped">
+							<tr>
+								<th>Part Name</th>
+								<th>Start Number</th>
+								<!-- <th>End Number</th> -->
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>
 		</div>
 		<div class="forUser mainTab" style="display: none;">
-			<h3>User Information</h3>
 			<table class="table-bordered table-striped">
 				<tr>
 					<th>N<u>o</u></th>
@@ -246,28 +268,14 @@ foreach ($files as $value) {
 			</table>
 			<br>
 			<button class="btn btn-success">Invite User</button>
+			<h4>User Information</h4>
 			<?php
 			$allProjects = getAllProjects();
 			?>
 		</div>
 	</div>
 </div>
-
-<div class="modal fade" role="dialog" id="sectionImgModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body">
-			</div>
-		</div>
-
-	</div>
-</div>
-
 <script type="text/javascript" src="assets/js/jquery-1.9.1.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/js/main/admin.js?<?=time()?>"></script>
 <script type="text/javascript">
 	function onTabClicked(_idTab){
@@ -276,26 +284,71 @@ foreach ($files as $value) {
 		$('.mainTab').hide();
 		$('.mainTab').eq(_idTab).show();
 	}
-	function getProjectInfo(){
-		$.post("api_process.php", {action: "getProjectInfo", projectPath: "project1"}, function(data){
+	function SelectedRow(_this){
+		$(_this).parent().find("tr").removeClass("active");
+		$(_this).addClass("active");
+		var projectPath = $(_this).find(".dirName").eq(0).text();
+		$.post("api_process.php", {action: "getProjectInfo", projectPath: projectPath}, function(data){
 			if( data != "false"){
 				var projectInfo = JSON.parse(data)[0];
-				console.log(projectInfo);
 				$("#projectName").val(projectInfo.ProjectName);
-				$("#projectType ." + projectInfo.ProjectType).prop("selected", true);
 				$("#zone").val(projectInfo.Zone);
 				$("#city").val(projectInfo.City);
 				$("#street").val(projectInfo.Street);
 				$("#no").val(projectInfo.No);
 				$("#constructor").val(projectInfo.Constructor);
-				$("#projectmanager").val(projectInfo.ProjectManager);
+				$("#projectmanager").val(projectInfo.Projectmanager);
 				$("#worksmanager").val(projectInfo.WorksManager);
 				$("#photography").val(projectInfo.Photography);
-				$("#buildingnumber").val(projectInfo.BuildingNumber);
+			} else{
+				$("#projectName").val("");
+				$("#zone").val("");
+				$("#city").val("");
+				$("#street").val("");
+				$("#no").val("");
+				$("#constructor").val("");
+				$("#projectmanager").val("");
+				$("#worksmanager").val("");
+				$("#photography").val("");
 			}
 		});
 	}
-	getProjectInfo();
+	function InsertNewProject(){
+		var dirName = prompt("Please enter new project(or directory) name.", "New Project");
+		if (dirName != null) {
+			$.post("api_process.php", {action:"newProject", directoryName: dirName}, function(data){
+				if( data == "OK"){
+					location.reload();
+				} else{
+					alert(data);
+				}
+			});
+		}
+	}
+	function onSaveName(_this){
+		var projectPath = $(_this).parent().parent().find(".dirName").text();
+		var projectName = $(_this).parent().parent().find(".projectName").text();
+		$.post("api_process.php", {action: "saveProjectName", projectPath: projectPath, projectName: projectName}, function(data){
+			if( data == "OK"){
+				alert("Successfully Saved.");
+			} else{
+				alert("Failed to save project name.");
+			}
+		});
+	}
+	function onEditName(_this){
+		var projectName = prompt("Please enter project name.", "New Project");
+		if (projectName != null) {
+			var dirName = $(_this).parent().parent().find(".dirName").text();
+			$.post("api_process.php", {action:"saveProjectName", projectPath: dirName, projectName: projectName}, function(data){
+				if( data == "OK"){	
+					$(_this).parent().parent().find(".projectName").html(projectName);
+				} else{
+					alert(data);
+				}
+			});
+		}
+	}
 	function onRemove(_this){
 		var r = confirm("Are you sure remove project?\nAll files will be removed from your disk.");
 		if( r == true){
@@ -315,19 +368,17 @@ foreach ($files as $value) {
 	}
 	function onSaveProjectInfo(){
 		var projectInfo = {};
-		projectInfo.ProjectPath = "project1";
+		projectInfo.ProjectPathProjectPath = $("#tblProjects tr.active .dirName").text();
 		projectInfo.ProjectName = $("#projectName").val();
 		projectInfo.Zone = $("#zone").val();
 		projectInfo.City = $("#city").val();
 		projectInfo.Street = $("#street").val();
 		projectInfo.No = $("#no").val();
 		projectInfo.Constructor = $("#constructor").val();
-		projectInfo.ProjectManager = $("#projectmanager").val();
+		projectInfo.Projectmanager = $("#projectmanager").val();
 		projectInfo.WorksManager = $("#worksmanager").val();
 		projectInfo.Photography = $("#photography").val();
 		projectInfo.ProjectType = $("#projectType option:selected").val();
-		projectInfo.DocumentDate = $("#documentdate").val();
-		projectInfo.BuildingNumber = $("#buildingnumber").val();
 		$.post("api_process.php", {action: "saveProjectInfo", projectInfo: JSON.stringify(projectInfo)}, function(data){
 			if( data == "OK"){
 				alert("Successfully saved.");
@@ -337,29 +388,5 @@ foreach ($files as $value) {
 		});
 	}
 	function SelectedUser(_this){
-	}
-	function openSectionImgModal(){
-		$('#sectionImgModal').modal('toggle');
-	}
-	function clickedApart(_this){
-		console.log(_this);
-		$(".mainContents").removeClass("selectedTr");
-		$(_this).addClass("selectedTr");
-		$("#sectionCount").val("");
-	}
-	function sectionCountChanged(){
-		if( $(".mainContents selectedTr").length == 0) return;
-		var nCount = $("#sectionCount").val();
-		var strHtml = "";
-		for(var i = 0; i < nCount; i++){
-			strHtml += '<tr>';
-				strHtml += '<td class="sectionNumber">' + (i + 1) + '</td>';
-				strHtml += '<td><input type="number" min="1" class="ImgNumber"></td>';
-			strHtml += '</tr>';
-		}
-		$("#tblSections tr").filter(function(_index){
-			return _index != 0;
-		}).remove();
-		$("#tblSections").append(strHtml);
 	}
 </script>
