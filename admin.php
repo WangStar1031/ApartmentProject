@@ -116,7 +116,7 @@ foreach ($files as $value) {
 						<span>
 							<h4>
 								Parts
-								<table class="nonBorder">
+								<table class="nonBorder nonPadding">
 									<tr>
 										<td><input class="form-control" type="text" name="txtCurPart"></td>
 										<td><button class="btn btn-success" onclick="addNewParts()">Add New</button></td>
@@ -179,6 +179,15 @@ foreach ($files as $value) {
 					</td>
 					<td class="vertical-top">
 						<h4>Apartment Information</h4>
+						<table class="table-bordered table-striped" id="tblPartInfos">
+							<tr>
+								<th>N<u>o</u></th>
+								<th>Part Name</th>
+								<th>Image N<u>o</u></th>
+								<!-- <th>End Number</th> -->
+							</tr>
+						</table>
+						<hr>
 						<table>
 							<tr>
 								<td>
@@ -199,17 +208,9 @@ foreach ($files as $value) {
 							</tr>
 						</table>
 						<br>
-						<table class="table-bordered table-striped">
-							<tr>
-								<th>N<u>o</u></th>
-								<th>Part Name</th>
-								<th>Image N<u>o</u></th>
-								<!-- <th>End Number</th> -->
-							</tr>
-						</table>
 						<br>
 						<p style="text-align: right;">
-							<button class="btn btn-success" style="vertical-align: bottom;">Save Apartment Info</button>
+							<button class="btn btn-success" style="vertical-align: bottom;" onclick="saveApartmentInfo()">Save Apartment Info</button>
 						</p>
 					</td>
 				</tr>
@@ -217,7 +218,7 @@ foreach ($files as $value) {
 		</div>
 		<div class="forUser mainTab" style="display: none;">
 			<h3>User Information</h3>
-			<table class="table-bordered table-striped">
+			<table class="table-bordered table-striped" id="tblUsers">
 				<tr>
 					<th>N<u>o</u></th>
 					<th>User Name</th>
@@ -233,10 +234,10 @@ foreach ($files as $value) {
 				?>
 				<tr onclick="SelectedUser(this)">
 					<td><?=$index?></td>
-					<td><?=$value['UserName']?></td>
-					<td><?=$value['UserEmail']?></td>
+					<td class="UserName"><?=$value['UserName']?></td>
+					<td class="UserEmail"><?=$value['UserEmail']?></td>
 					<td>
-						<button class="btn btn-danger">Remove</button>
+						<button class="btn btn-danger" onclick="removeUser(this)">Remove</button>
 					</td>
 				</tr>
 				<?php
@@ -245,7 +246,7 @@ foreach ($files as $value) {
 				?>
 			</table>
 			<br>
-			<button class="btn btn-success">Invite User</button>
+			<button class="btn btn-success" onclick="inviteUser()">Invite User</button>
 			<?php
 			$allProjects = getAllProjects();
 			?>
@@ -258,8 +259,10 @@ foreach ($files as $value) {
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h3>Section Image for Current Apartment</h3>
 			</div>
 			<div class="modal-body">
+				<img src="" style="width: 100%;">
 			</div>
 		</div>
 
@@ -270,96 +273,50 @@ foreach ($files as $value) {
 <script src="assets/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="assets/js/main/admin.js?<?=time()?>"></script>
 <script type="text/javascript">
-	function onTabClicked(_idTab){
-		$("ul.nav-tabs li").removeClass("active");
-		$("ul.nav-tabs li").eq(_idTab).addClass("active");
-		$('.mainTab').hide();
-		$('.mainTab').eq(_idTab).show();
+
+	function SelectedUser(_this){
+		$("#tblUsers tr").removeClass("selectedTr");
+		$(_this).addClass("selectedTr");
 	}
-	function getProjectInfo(){
-		$.post("api_process.php", {action: "getProjectInfo", projectPath: "project1"}, function(data){
-			if( data != "false"){
-				var projectInfo = JSON.parse(data)[0];
-				console.log(projectInfo);
-				$("#projectName").val(projectInfo.ProjectName);
-				$("#projectType ." + projectInfo.ProjectType).prop("selected", true);
-				$("#zone").val(projectInfo.Zone);
-				$("#city").val(projectInfo.City);
-				$("#street").val(projectInfo.Street);
-				$("#no").val(projectInfo.No);
-				$("#constructor").val(projectInfo.Constructor);
-				$("#projectmanager").val(projectInfo.ProjectManager);
-				$("#worksmanager").val(projectInfo.WorksManager);
-				$("#photography").val(projectInfo.Photography);
-				$("#buildingnumber").val(projectInfo.BuildingNumber);
+	function validateEmail(email) {
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(String(email).toLowerCase());
+	}
+	function inviteUser(){
+		var UserEmail = prompt("Please enter user email that you want to invite.", "");
+		if (UserEmail != null) {
+			if( !validateEmail(UserEmail)){
+				alert("Invalid Email format.");
+				return;
 			}
-		});
-	}
-	getProjectInfo();
-	function onRemove(_this){
-		var r = confirm("Are you sure remove project?\nAll files will be removed from your disk.");
-		if( r == true){
-			var dirName = $(_this).parent().parent().find(".dirName").eq(0).text();
-			$.post("api_process.php", {action: "removeProject", directoryName: dirName}, function(data){
-				if( data == "OK"){
-					$(_this).parent().parent().remove();
-					var arrNumbers = $("#tblProjects .number");
-					for( var i = 1; i <= arrNumbers.length; i++){
-						arrNumbers.eq(i - 1).html(i);
-					}
-				} else{
-					alert("Can't remove project.");
-				}
+			$.post("api_process.php", {action: "sendInviteEmail", UserEmail: UserEmail}, function(data){
+				alert(data);
+				var strHtml = "";
+				strHtml += '<tr>';
+					strHtml += '<td>' + $("#tblUsers tr").length + '</td>';
+					strHtml += '<td class="UserName"></td>';
+					strHtml += '<td class="UserEmail">' + UserEmail + '</td>';
+					strHtml += '<td>';
+						strHtml += '<button class="btn btn-danger" onclick="removeUser(this)">Remove</button>';
+					strHtml += '</td>';
+				strHtml += '</tr>';
+				$("#tblUsers").append(strHtml);
 			});
 		}
 	}
-	function onSaveProjectInfo(){
-		var projectInfo = {};
-		projectInfo.ProjectPath = "project1";
-		projectInfo.ProjectName = $("#projectName").val();
-		projectInfo.Zone = $("#zone").val();
-		projectInfo.City = $("#city").val();
-		projectInfo.Street = $("#street").val();
-		projectInfo.No = $("#no").val();
-		projectInfo.Constructor = $("#constructor").val();
-		projectInfo.ProjectManager = $("#projectmanager").val();
-		projectInfo.WorksManager = $("#worksmanager").val();
-		projectInfo.Photography = $("#photography").val();
-		projectInfo.ProjectType = $("#projectType option:selected").val();
-		projectInfo.DocumentDate = $("#documentdate").val();
-		projectInfo.BuildingNumber = $("#buildingnumber").val();
-		$.post("api_process.php", {action: "saveProjectInfo", projectInfo: JSON.stringify(projectInfo)}, function(data){
-			if( data == "OK"){
-				alert("Successfully saved.");
-			} else{
-				alert("Can't saved.");
-			}
-		});
-	}
-	function SelectedUser(_this){
-	}
-	function openSectionImgModal(){
-		$('#sectionImgModal').modal('toggle');
-	}
-	function clickedApart(_this){
+	function removeUser(_this){
 		console.log(_this);
-		$(".mainContents").removeClass("selectedTr");
-		$(_this).addClass("selectedTr");
-		$("#sectionCount").val("");
-	}
-	function sectionCountChanged(){
-		if( $(".mainContents selectedTr").length == 0) return;
-		var nCount = $("#sectionCount").val();
-		var strHtml = "";
-		for(var i = 0; i < nCount; i++){
-			strHtml += '<tr>';
-				strHtml += '<td class="sectionNumber">' + (i + 1) + '</td>';
-				strHtml += '<td><input type="number" min="1" class="ImgNumber"></td>';
-			strHtml += '</tr>';
+		var r = confirm("Are you sure remove selected User?");
+		if( r == true){
+			var UserEmail = $(_this).parent().parent().find(".UserEmail").text();
+			$.post("api_process.php", {action:"removeUser", UserEmail: UserEmail}, function(data){
+				console.log(data);
+				if( data == "OK"){
+					$(_this).parent().parent().remove();
+				} else{
+					alert("Failed to remove.");
+				}
+			});
 		}
-		$("#tblSections tr").filter(function(_index){
-			return _index != 0;
-		}).remove();
-		$("#tblSections").append(strHtml);
 	}
 </script>

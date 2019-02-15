@@ -1,6 +1,7 @@
 var arrParts = [];
 var projectInfo = {};
 var arrApartmentInfo = [];
+var arrAllParts = [];
 
 function clickedApart(_this){
 	$(".mainContents").removeClass("selectedTr");
@@ -17,17 +18,18 @@ function insertNewApartments(_curTr){
 	strHtml += '</tr>';
 	$(".projectTable").append(strHtml);
 	var aptInfo = {};
-	aptInfo.aptName = aptName;
-	aptInfo.photoCount = aptPicCount;
-	aptInfo.address = "";
-	aptInfo.aptParts = [];
+	aptInfo.ApartmentName = aptName;
+	aptInfo.PictureCount = aptPicCount;
+	aptInfo.PartInfos = "";
+	aptInfo.SectionInfos = "";
+	aptInfo.SectionCount = 0;
 	arrApartmentInfo.push(aptInfo);
 }
 function insertNewApartmentsFromArray(){
 	var strHtml = "";
 	for( var i = 0; i < arrApartmentInfo.length; i++){
-		var _aptName = arrApartmentInfo[i].aptName;
-		var _aptPicCount = arrApartmentInfo[i].photoCount;
+		var _aptName = arrApartmentInfo[i].ApartmentName;
+		var _aptPicCount = arrApartmentInfo[i].PictureCount;
 		strHtml += '<tr class="mainContents" onclick="clickedApart(this)">';
 			strHtml += '<td><input type="checkbox" name="chk_aparts"></td>';
 			strHtml += '<td class="apartDir">' + _aptName + '</td>';
@@ -35,12 +37,6 @@ function insertNewApartmentsFromArray(){
 		strHtml += '</tr>';
 	}
 	$(".projectTable").append(strHtml);
-	// var aptInfo = {};
-	// aptInfo.aptName = _aptName;
-	// aptInfo.photoCount = _aptPicCount;
-	// aptInfo.address = "";
-	// aptInfo.aptParts = [];
-	// arrApartmentInfo.push(aptInfo);
 }
 function checkInRight(_aptName){
 	var arrRightTableTrs = $(".projectTable tr.mainContents");
@@ -141,16 +137,192 @@ function onSaveProjectInfo(){
 	});
 }
 
+function onTabClicked(_idTab){
+	$("ul.nav-tabs li").removeClass("active");
+	$("ul.nav-tabs li").eq(_idTab).addClass("active");
+	$('.mainTab').hide();
+	$('.mainTab').eq(_idTab).show();
+}
+
 function getProjectInfo(){
-	var strInfo = $("#projectInfo").val();
-	if( strInfo ){
-		projectInfo = JSON.parse(strInfo);
-		console.log( projectInfo);
-		$("#projectName").val(projectInfo.name);
-		arrParts = projectInfo.parts;
-		makeParts();
-		arrApartmentInfo = projectInfo.apartmentInfo;
-		insertNewApartmentsFromArray();
-	}
+	$.post("api_process.php", {action: "getProjectInfo", projectPath: "project1"}, function(data){
+		if( data != "false"){
+			var projectInfo = JSON.parse(data)[0];
+			console.log(projectInfo);
+			$("#projectName").val(projectInfo.ProjectName);
+			$("#projectType ." + projectInfo.ProjectType).prop("selected", true);
+			$("#zone").val(projectInfo.Zone);
+			$("#city").val(projectInfo.City);
+			$("#street").val(projectInfo.Street);
+			$("#no").val(projectInfo.No);
+			$("#constructor").val(projectInfo.Constructor);
+			$("#projectmanager").val(projectInfo.ProjectManager);
+			$("#worksmanager").val(projectInfo.WorksManager);
+			$("#photography").val(projectInfo.Photography);
+			$("#buildingnumber").val(projectInfo.BuildingNumber);
+			var projectId = projectInfo.Id;
+			$.post("api_process.php", {action: "getParts", projectId: projectId}, function(data){
+				if( data != "false"){
+					var arrPartInfos = JSON.parse(data);
+					arrAllParts = arrPartInfos;
+					console.log(arrPartInfos);
+					for( var i = 0; i < arrPartInfos.length; i++){
+						arrParts.push(arrPartInfos[i].PartName);
+					}
+					makeParts();
+				}
+			});
+			$.post("api_process.php", {action: "getApartments", projectId: projectId}, function(data){
+				if( data!= "false"){
+					arrApartmentInfo = JSON.parse(data);
+					console.log(arrApartmentInfo);
+					insertNewApartmentsFromArray();
+				}
+			});
+		}
+	});
 }
 getProjectInfo();
+
+function onSaveProjectInfo(){
+	var projectInfo = {};
+	projectInfo.ProjectPath = "project1";
+	projectInfo.ProjectName = $("#projectName").val();
+	projectInfo.Zone = $("#zone").val();
+	projectInfo.City = $("#city").val();
+	projectInfo.Street = $("#street").val();
+	projectInfo.No = $("#no").val();
+	projectInfo.Constructor = $("#constructor").val();
+	projectInfo.ProjectManager = $("#projectmanager").val();
+	projectInfo.WorksManager = $("#worksmanager").val();
+	projectInfo.Photography = $("#photography").val();
+	projectInfo.ProjectType = $("#projectType option:selected").val();
+	projectInfo.DocumentDate = $("#documentdate").val();
+	projectInfo.BuildingNumber = $("#buildingnumber").val();
+	projectInfo.arrParts = arrParts;
+	projectInfo.arrApartmentInfo = arrApartmentInfo;
+	$.post("api_process.php", {action: "saveProjectInfo", projectInfo: JSON.stringify(projectInfo)}, function(data){
+		if( data == "OK"){
+			alert("Successfully saved.");
+		} else{
+			alert("Can't saved.");
+		}
+	});
+}
+
+function openSectionImgModal(){
+	$('#sectionImgModal').modal('toggle');
+}
+function drawParts(_partInfos){
+	$("#tblPartInfos tr").filter(function(_index){
+		return _index;
+	}).remove();
+	var arrInfos = [];
+	if( _partInfos){
+		arrInfos = _partInfos.split(",");
+	}
+	for( var i = 0; i < arrAllParts.length; i++){
+		var partName = arrAllParts[i].PartName;
+		var partId = arrAllParts[i].Id;
+		var strHtml = "";
+		strHtml += '<tr>';
+			strHtml += '<td>' + (i + 1) + '</td>';
+			strHtml += '<td class="PartName">' + partName + '</td>';
+			strHtml += '<td><input type="number" class="form-control ImageNumber"';
+			for( var j = 0; j < arrInfos.length; j++){
+				var curPart = arrInfos[j];
+				if( curPart >= 0){
+					strHtml += ' value="' + curPart + '"';
+				}
+			}
+			strHtml += '></td>';
+		strHtml += '</tr>';
+		$("#tblPartInfos").append(strHtml);
+	}
+}
+function drawSections(_sectionInfos){
+	$("#tblSections tr").filter(function(_index){
+		return _index;
+	}).remove();
+	var arrInfos = [];
+	if( _sectionInfos){
+		arrInfos = _sectionInfos.split(",");
+	}
+	for( var i = 0; i < arrInfos.length; i++){
+		var imgNumber = arrInfos[i];
+		var strHtml = "";
+		strHtml += '<tr>';
+			strHtml += '<td>' + (i + 1) + '</td>';
+			strHtml += '<td><input type="number" class="form-control ImageNumber"';
+			if( imgNumber >= 0){
+				strHtml += ' value="' + imgNumber + '"';
+			}
+			strHtml += '></td>';
+		strHtml += '</tr>';
+		$("#tblSections").append(strHtml);
+	}
+}
+function clickedApart(_this){
+	$(".mainContents").removeClass("selectedTr");
+	$(_this).addClass("selectedTr");
+	$("#sectionCount").val("");
+	sectionCountChanged();
+	var aptName = $(_this).find(".apartDir").text();
+	var imgSection = "container/project1/sectiuni/sectiuni-" + aptName + ".jpg";
+	$("#sectionImgModal .modal-body img").attr("src", imgSection);
+	for( var i = 0; i < arrApartmentInfo.length; i++){
+		if( arrApartmentInfo[i].ApartmentName == aptName){
+			if( arrApartmentInfo[i].SectionCount != 0){
+				$("#sectionCount").val(arrApartmentInfo[i].SectionCount);
+			}
+			drawParts(arrApartmentInfo[i].PartInfos);
+			drawSections(arrApartmentInfo[i].SectionInfos);
+			break;
+		}
+	}
+}
+function sectionCountChanged(){
+	if( $(".mainContents.selectedTr").length == 0) return;
+	$("#tblSections tr").filter(function(_index){
+		return _index != 0;
+	}).remove();
+	var nCount = $("#sectionCount").val();
+	var strHtml = "";
+	for(var i = 0; i < nCount; i++){
+		strHtml += '<tr>';
+			strHtml += '<td class="sectionNumber">' + (i + 1) + '</td>';
+			strHtml += '<td><input type="number" min="1" class="ImgNumber"></td>';
+		strHtml += '</tr>';
+	}
+	$("#tblSections").append(strHtml);
+}
+function saveApartmentInfo(){
+	if( $(".mainContents.selectedTr").length == 0) return;
+	var strAptName = $(".mainContents.selectedTr .apartDir").text();
+	for( var i = 0; i < arrApartmentInfo.length; i ++){
+		if( arrApartmentInfo[i].ApartmentName == strAptName){
+			var arrInputs = $("#tblPartInfos td input.ImageNumber");
+			var arrNumbers = [];
+			for( var j = 0; j < arrInputs.length; j++){
+				var curInput = arrInputs.eq(j);
+				var val = curInput.val();
+				if( val == "" ) arrNumbers.push(-1);
+				else arrNumbers.push(parseInt(val));
+			}
+			arrApartmentInfo[i].PartInfos = arrNumbers.join(",");
+			var strSectionCount = $("#sectionCount").val();
+			if( strSectionCount == "")strSectionCount = "0";
+			arrApartmentInfo[i].SectionCount = parseInt(strSectionCount);
+			var arrSecInputs = $("#tblSections td input.ImgNumber");
+			var arrSecNumbers = [];
+			for( var j = 0; j < arrSecInputs.length; j++){
+				var curInput = arrSecInputs.eq(j);
+				var val = curInput.val();
+				if( val == "") arrSecNumbers.push(-1);
+				else arrSecNumbers.push(parseInt(val));
+			}
+			arrApartmentInfo[i].SectionInfos = arrSecNumbers.join(",");
+			break;
+		}
+	}
+}

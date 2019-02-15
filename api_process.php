@@ -12,6 +12,18 @@ switch ($_action) {
 		if( isset($_POST['projectPath'])) $_projectPath = $_POST['projectPath'];
 		echo json_encode(getProjectInfo( $_projectPath));
 		break;
+	case 'getParts':
+		$_projectId = '';
+		if( isset($_GET['projectId'])) $_projectId = $_GET['projectId'];
+		if( isset($_POST['projectId'])) $_projectId = $_POST['projectId'];
+		echo json_encode(getParts($_projectId));
+		break;
+	case 'getApartments':
+		$_projectId = '';
+		if( isset($_GET['projectId'])) $_projectId = $_GET['projectId'];
+		if( isset($_POST['projectId'])) $_projectId = $_POST['projectId'];
+		echo json_encode(getApartments($_projectId));
+		break;
 	case "imgUpload":
 		$_apartNo = '';
 		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
@@ -90,6 +102,18 @@ switch ($_action) {
 		if( isset($_POST['projectInfo'])) $_projectInfo = $_POST['projectInfo'];
 		$_objProjectInfo = json_decode($_projectInfo);
 		saveProjectInfo( $_objProjectInfo);
+		break;
+	case "sendInviteEmail":
+		$_UserEmail = "";
+		if( isset($_GET['UserEmail'])) $_UserEmail = $_GET['UserEmail'];
+		if( isset($_POST['UserEmail'])) $_UserEmail = $_POST['UserEmail'];
+		sendInviteEmail($_UserEmail);
+		break;
+	case "removeUser":
+		$_UserEmail = "";
+		if( isset($_GET['UserEmail'])) $_UserEmail = $_GET['UserEmail'];
+		if( isset($_POST['UserEmail'])) $_UserEmail = $_POST['UserEmail'];
+		removeUser($_UserEmail);
 		break;
 	default:
 		break;
