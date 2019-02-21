@@ -132,13 +132,13 @@
 		$sql = "SELECT * FROM projectinfo WHERE ProjectPath='$ProjectPath'";
 		$result = $db->select($sql);
 		if( $result == false){
-			$sql = "INSERT INTO projectinfo(ProjectPath, ProjectName, ProjectType, Zone, City, Street, No, Constructor, ProjectManager, WorksManager, Photography, DocumentDate, BuildingNumber) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			$sql = "INSERT INTO projectinfo(ProjectPath, ProjectName, ProjectNumber, ProjectType, Zone, City, Street, No, Constructor, ProjectManager, WorksManager, Photography, DocumentDate, BuildingNumber, EntranceNumber) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			$stmt = $db->prepare($sql);
-			$stmt->execute([$_objProjectInfo->ProjectPath, $_objProjectInfo->ProjectName, $_objProjectInfo->ProjectType, $_objProjectInfo->Zone, $_objProjectInfo->City, $_objProjectInfo->Street, $_objProjectInfo->No, $_objProjectInfo->Constructor, $_objProjectInfo->ProjectManager, $_objProjectInfo->WorksManager, $_objProjectInfo->Photography, $_objProjectInfo->DocumentDate, $_objProjectInfo->BuildingNumber]);
+			$stmt->execute([$_objProjectInfo->ProjectPath, $_objProjectInfo->ProjectName, $_objProjectInfo->ProjectNumber, $_objProjectInfo->ProjectType, $_objProjectInfo->Zone, $_objProjectInfo->City, $_objProjectInfo->Street, $_objProjectInfo->No, $_objProjectInfo->Constructor, $_objProjectInfo->ProjectManager, $_objProjectInfo->WorksManager, $_objProjectInfo->Photography, $_objProjectInfo->DocumentDate, $_objProjectInfo->BuildingNumber, $_objProjectInfo->EntranceNumber]);
 		} else{
-			$sql = "UPDATE projectinfo SET ProjectPath=?, ProjectName=?, ProjectType=?, Zone=?, City=?, Street=?, No=?, Constructor=?, ProjectManager=?, WorksManager=?, Photography=?, DocumentDate=?, BuildingNumber=? WHERE ProjectPath='$ProjectPath'";
+			$sql = "UPDATE projectinfo SET ProjectPath=?, ProjectName=?, ProjectNumber=?, ProjectType=?, Zone=?, City=?, Street=?, No=?, Constructor=?, ProjectManager=?, WorksManager=?, Photography=?, DocumentDate=?, BuildingNumber=?, EntranceNumber=? WHERE ProjectPath='$ProjectPath'";
 			$stmt = $db->prepare($sql);
-			$stmt->execute([$_objProjectInfo->ProjectPath, $_objProjectInfo->ProjectName, $_objProjectInfo->ProjectType, $_objProjectInfo->Zone, $_objProjectInfo->City, $_objProjectInfo->Street, $_objProjectInfo->No, $_objProjectInfo->Constructor, $_objProjectInfo->ProjectManager, $_objProjectInfo->WorksManager, $_objProjectInfo->Photography, $_objProjectInfo->DocumentDate, $_objProjectInfo->BuildingNumber]);
+			$stmt->execute([$_objProjectInfo->ProjectPath, $_objProjectInfo->ProjectName, $_objProjectInfo->ProjectNumber, $_objProjectInfo->ProjectType, $_objProjectInfo->Zone, $_objProjectInfo->City, $_objProjectInfo->Street, $_objProjectInfo->No, $_objProjectInfo->Constructor, $_objProjectInfo->ProjectManager, $_objProjectInfo->WorksManager, $_objProjectInfo->Photography, $_objProjectInfo->DocumentDate, $_objProjectInfo->BuildingNumber, $_objProjectInfo->EntranceNumber]);
 		}
 
 		$sql = "SELECT * FROM projectinfo WHERE ProjectPath='$ProjectPath'";

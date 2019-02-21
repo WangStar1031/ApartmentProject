@@ -124,18 +124,18 @@ function addNewParts(){
 	}
 	$("input[name=txtCurPart]").focus();
 }
-function onSaveProjectInfo(){
-	projectInfo.name = $("#projectName").val();
-	projectInfo.parts = arrParts;
-	projectInfo.apartmentInfo = arrApartmentInfo;
-	$.post("api_process.php", {action:"saveProjectInfo", data: JSON.stringify(projectInfo)}, function(data){
-		if( data == "OK"){
-			alert("Successfully saved.");
-		} else{
-			alert("No Save.");
-		}
-	});
-}
+// function onSaveProjectInfo(){
+// 	projectInfo.name = $("#projectName").val();
+// 	projectInfo.parts = arrParts;
+// 	projectInfo.apartmentInfo = arrApartmentInfo;
+// 	$.post("api_process.php", {action:"saveProjectInfo", data: JSON.stringify(projectInfo)}, function(data){
+// 		if( data == "OK"){
+// 			alert("Successfully saved.");
+// 		} else{
+// 			alert("No Save.");
+// 		}
+// 	});
+// }
 
 function onTabClicked(_idTab){
 	$("ul.nav-tabs li").removeClass("active");
@@ -150,6 +150,7 @@ function getProjectInfo(){
 			var projectInfo = JSON.parse(data)[0];
 			console.log(projectInfo);
 			$("#projectName").val(projectInfo.ProjectName);
+			$("#projectNumber").val(projectInfo.ProjectNumber);
 			$("#projectType ." + projectInfo.ProjectType).prop("selected", true);
 			$("#zone").val(projectInfo.Zone);
 			$("#city").val(projectInfo.City);
@@ -160,6 +161,7 @@ function getProjectInfo(){
 			$("#worksmanager").val(projectInfo.WorksManager);
 			$("#photography").val(projectInfo.Photography);
 			$("#buildingnumber").val(projectInfo.BuildingNumber);
+			$("#entrancenumber").val(projectInfo.EntranceNumber);
 			var projectId = projectInfo.Id;
 			$.post("api_process.php", {action: "getParts", projectId: projectId}, function(data){
 				if( data != "false"){
@@ -188,6 +190,7 @@ function onSaveProjectInfo(){
 	var projectInfo = {};
 	projectInfo.ProjectPath = "project1";
 	projectInfo.ProjectName = $("#projectName").val();
+	projectInfo.ProjectNumber = $("#projectNumber").val();
 	projectInfo.Zone = $("#zone").val();
 	projectInfo.City = $("#city").val();
 	projectInfo.Street = $("#street").val();
@@ -199,6 +202,7 @@ function onSaveProjectInfo(){
 	projectInfo.ProjectType = $("#projectType option:selected").val();
 	projectInfo.DocumentDate = $("#documentdate").val();
 	projectInfo.BuildingNumber = $("#buildingnumber").val();
+	projectInfo.EntranceNumber = $("#entrancenumber").val();
 	projectInfo.arrParts = arrParts;
 	projectInfo.arrApartmentInfo = arrApartmentInfo;
 	$.post("api_process.php", {action: "saveProjectInfo", projectInfo: JSON.stringify(projectInfo)}, function(data){
@@ -229,12 +233,12 @@ function drawParts(_partInfos){
 			strHtml += '<td>' + (i + 1) + '</td>';
 			strHtml += '<td class="PartName">' + partName + '</td>';
 			strHtml += '<td><input type="number" class="form-control ImageNumber"';
-			for( var j = 0; j < arrInfos.length; j++){
-				var curPart = arrInfos[j];
+			// for( var j = 0; j < arrInfos.length; j++){
+				var curPart = arrInfos[i];
 				if( curPart >= 0){
 					strHtml += ' value="' + curPart + '"';
 				}
-			}
+			// }
 			strHtml += '></td>';
 		strHtml += '</tr>';
 		$("#tblPartInfos").append(strHtml);
@@ -253,7 +257,7 @@ function drawSections(_sectionInfos){
 		var strHtml = "";
 		strHtml += '<tr>';
 			strHtml += '<td>' + (i + 1) + '</td>';
-			strHtml += '<td><input type="number" class="form-control ImageNumber"';
+			strHtml += '<td><input type="number" class="form-control ImgNumber"';
 			if( imgNumber >= 0){
 				strHtml += ' value="' + imgNumber + '"';
 			}

@@ -20,27 +20,26 @@ if( $_SESSION['reparationUserName'] == ""){
 	<title>Photo Documentation</title>
 	<link rel="icon" type="image/png" href="assets/images/reparation_logo.png">
 
-	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-
-	<link rel="stylesheet" type="text/css" href="assets/css/master.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/mastertag.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/masterclass.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/project.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/dropdawn.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/popup.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/receptionnotes.css">
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<!-- <link href="assets/css/boilerplate.css" rel="stylesheet" type="text/css"> -->
+	<link href="assets/css/master.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/mastertag.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/masterclass.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/project.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/dropdawn.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/popup.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/receptionnotes.css" rel="stylesheet" type="text/css">
 
 	<link rel="stylesheet" href="assets/css/topnav/normalize.css">
 	<link rel="stylesheet" href="assets/css/topnav/ospb.css">
 	<link rel="stylesheet" href="assets/css/topnav/horizontal.css">
+	<link rel="stylesheet" href="assets/css/topnav/next-prev.css">
 	<link rel="stylesheet" href="assets/css/topnav/displayornot.css">
 	<link rel="stylesheet" href="assets/css/topnav/content.css">
 	<link rel="stylesheet" href="assets/css/topnav/toptable.css">
 	<link rel="stylesheet" href="assets/css/sidebar/toptable.css">
 	<link rel="stylesheet" href="assets/css/sidebar/content.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-	
 	<script src="assets/js/respond.min.js"></script>
 	<!-- <script src="assets/js/jquery-1.10.1.js"></script> -->
 	<script src="assets/js/topnav/modernizr.js"></script>
@@ -94,32 +93,19 @@ if( $_SESSION['reparationUserName'] == ""){
 			box-sizing: content-box!important;
 		}
 	</style>
+
+
 </head>
+
 <body>
 <?php
 $apartNo = 1;
-require_once __DIR__ . "/libInformation.php";
 if( isset($_GET['apartNo'])){
 	$apartNo = $_GET['apartNo'];
 }
 $path = dirname($_SERVER['REQUEST_URI']) . "/";
-$project = getProjectInfo("project1");
-if( $project == false){
-	echo "No project information.";
-	exit();
-}
-$projectInfo = $project[0];
-$documentDate = $projectInfo['DocumentDate'];
-$documentMonth = date("m", strtotime($documentDate));
-$documentYear = date("Y", strtotime($documentDate));
-$parts4Project = getParts($projectInfo['Id']);
-$apartmentInfo = getApratmentInfo($projectInfo['Id']);
-$curApartment = $apartmentInfo[$apartNo - 1];
-$arrPartInfos = explode(",", $curApartment['PartInfos']);
-$sectionCount = $curApartment['SectionCount'];
-$arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 ?>
-<a href="logout.php" style="position: absolute;"><button class="btn btn-danger" style="margin: 10px;">Log out</button></a>
+<a href="logout.php"><button class="btn btn-danger" style="margin: 10px;">Log out</button></a>
 <div class="gridContainer clearfix"></div>
 <div id="main-container">
    <div id="comercial-container" class="display-comercial">
@@ -129,108 +115,55 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
     </div>
 <div id="project-container">
 <div id="top"></div>
-<style type="text/css">
-	#sub-header table table label{
-		background-color: #ccc;
-	}
-</style>
 <div id="project-content">
     <div id="sub-header">
         <header class="pagespan">
-        	<table class="table-bordered" style="width: 100%">
-        		<tr>
-        			<td>
-        				<table style="width: 100%">
-        					<tr>
-        						<td id="projectNumber"><?=$projectInfo['ProjectNumber']?></td>
-        						<td><label>N<u>o</u>.</label></td>
-        						<td colspan="2" id="projectType"><?=$projectInfo['ProjectType']?></td>
-        						<td><label>Type</label></td>
-        						<td colspan="2" id="projectName"><?=$projectInfo['ProjectName']?></td>
-        						<td><label>Name</label></td>
-        						<td>Project</td>
-        					</tr>
-        					<tr>
-        						<td id="addressNo"><?=$projectInfo['No']?></td>
-        						<td><label>N<u>o</u>.</label></td>
-        						<td colspan="2" id="addressStreet"><?=$projectInfo['Street']?></td>
-        						<td><label>Street</label></td>
-        						<td id="addressCity"><?=$projectInfo['City']?></td>
-        						<td><label>City</label></td>
-        						<td id="addressZone"><?=$projectInfo['Zone']?></td>
-        						<td><label>Zone</label></td>
-        					</tr>
-        					<tr>
-        						<td colspan="3" id="projectManager"><?=$projectInfo['ProjectManager']?></td>
-        						<td colspan="2"><label>ProjectManger</label></td>
-        						<td colspan="2" id="constructor"><?=$projectInfo['Constructor']?></td>
-        						<td colspan="2"><label>Contractor</label></td>
-        					</tr>
-        					<tr>
-        						<td colspan="3" id="photography"><?=$projectInfo['Photography']?></td>
-        						<td colspan="2"><label>Photography</label></td>
-        						<td colspan="2" id="worksManager"><?=$projectInfo['WorksManager']?></td>
-        						<td colspan="2"><label>Works Manager</label></td>
-        					</tr>
-        				</table>
-        			</td>
-        			<td>
-        				<table style="width: 100%">
-        					<tr>
-        						<td colspan="2" id="buildingNo"><?=$projectInfo['BuildingNumber']?></td>
-        						<td><label>Building<br>No. / Name</label></td>
-        					</tr>
-        					<tr>
-        						<td colspan="2" id="entranceNumber"><?=$projectInfo['EntranceNumber']?></td>
-        						<td><label>Entrance<br>No. / Name</label></td>
-        					</tr>
-        					<tr>
-        						<td id="documentMonth"><?=$documentMonth?></td>
-        						<td id="documentYear"><?=$documentYear?></td>
-        						<td><label>Documentation<br>Date</label></td>
-        					</tr>
-        				</table>
-        			</td>
-        		</tr>
-        	</table>
+		<table class="table-2">
+		    <tr class="row-2_1">
+				<td class="cell-2_1"><span class="cell-2_1-title">צילום ותיעוד</span></td>
+				<td class="cell-2_1"><span class="cell-2_1-title" title="Contractor">יזם</span></td>
+				<td class="cell-2_1"><span class="cell-2_1-title" title="Project">פרויקט</span></td>
+			</tr>
+		    <tr class="row-2_2">
+			    <td class="cell-2_2"><span class="cell-2_2-title" >WatchWork</span></td>
+				<td class="cell-2_2"><span class="cell-2_2-title content-constructor"></span></td>			
+				<td class="cell-2_2"><span class="cell-2_2-title content-proiect"></span></td>
+			</tr>			
+		    <tr class="row-2_3">
+			    <td class="cell-2_3"><span class="cell-2_2-subtitle content-subwatchwork"></span></td>
+				<td class="cell-2_3"><span class="cell-2_2-subtitle content-subconstructor"></span></td>			
+				<td class="cell-2_3"><span class="cell-2_2-subtitle content-subproiect"></span></td>
+			</tr>			
+		</table>
+		<table class="table-3">
+		    <tr class="row-3">
+			    <td class="cell-3"><span class="family-title" title="Date"> תאריך: </span><span class="family-name content-data" title="Date"></span></td>
+				<td class="cell-3"><span class="family-title" title="Entrance"> כניסה:</span> <span class="family-name  content-what" title="Entrance"></span></td>				
+				<td class="cell-3"><span class="family-title" title="Building">בניין:</span> <span class="family-name  content-apartament" title="Building"></span></td>
+			</tr>
+		</table>
+				  
 	    </header>
 		
 		<div class="pagespan">
 		    <div class="wrap">
-			    <!-- <div class="scrollbar">
+			    <div class="scrollbar">
 				    <div class="handle">
 					    <div class="mousearea"></div>
 				    </div>
-			    </div> -->
-			    <?php
-			    $nApartCount = count($apartmentInfo);
-			    ?>
-			    <div class="frame" id="centered" style=" overflow-x: scroll; overflow-y: hidden;">
-				    <ul class="clearfix" style="width: <?=260*$nApartCount?>px;">
+			    </div>
+
+			    <div class="frame" id="centered">
+				    <ul class="clearfix">
 				    	<?php
-				    	for($i = 1; $i <= $nApartCount; $i++){
+				    	for($i = 1; $i <= 20; $i++){
 					    	$href = $path . "main.php?apartNo=" . $i;
 			    		?>
-					    <li class="<?php if($apartNo == $i) echo "active";?>">
+					    <li class="display-or-not-<?=$i?> <?php if($apartNo == $i) echo "active";?>">
                             <div class="horiz-top" title="Apartment"><a href="<?=$href?>"><span class="doc-number"><?=$i?></span><span class="doc">דירה</span></a></div>
 							<div class="horiz-bottom">
-								<?php
-								$curApartment = $apartmentInfo[$i - 1];
-								$width = 100 / count($parts4Project);
-								for( $j = 0; $j < count($parts4Project); $j++){
-									$val = $parts4Project[$j]['PartName'];
-									$arrPartInfos = explode(",", $curApartment['PartInfos']);
-									$imgNumber = 0;
-									if( count($arrPartInfos) > $j){
-										$imgNumber = $arrPartInfos[$j];
-									}
-								?>
-								<div class="fleft horiz-bottoms" title="<?=$val?>" style="width: <?=$width?>%"><a href="<?=$href?>#No<?=$imgNumber?>"><?=$val?></a></div>
-								<?php
-								}
-								?>
-						       <!-- <div class="fleft horiz-bottoms" title="Ceilings"><a href="<?=$href?>#ceilins">תיקרות</a></div>
-							   <div class="fleft horiz-bottoms" title="flooring"><a href="<?=$href?>#floorings">רצפות</a></div> -->
+						       <div class="fleft horiz-bottoms" title="Ceilings"><a href="<?=$href?>#ceilins">תיקרות</a></div>
+							   <div class="fleft horiz-bottoms" title="flooring"><a href="<?=$href?>#floorings">רצפות</a></div>
 							</div>
 						</li>
 			    		<?php
@@ -297,10 +230,9 @@ foreach($files as $file){
 		    <div class="fleft popup-container-numere">
 	            <div class="popup-content-numere">
 	            	<?php
-	            	for($i = 1; $i <= $sectionCount; $i++){
-	            		$curSectionNumber = $arrSectionInfos[$i - 1];
+	            	for($i = 1; $i < 10; $i++){
 	            	?>
-					<span class="sections"><a href="#No<?=$curSectionNumber?>"><?=$i?></a></span>
+					<span class="sections"><a href="#section<?=$i?>"><?=$i?></a></span>
 	            	<?php
 		            }
 	            	?>
@@ -367,47 +299,32 @@ foreach($files as $file){
 				<img class="desktop" src="container/project1/ap<?=$apartNo?>/project/photos/<?=$i?>pi.jpg" title="click to switch between photo and plan">
 			</div>
 		</div>
-		<div class="textBox">
-			<textarea id="text<?=$i?>"></textarea>
-			<button class="btn btn-success" onclick="onNoteSave(this)">Save</button>
-		</div>
 		<div id="dwld">
-			<div class="fleft" title="photo number">
+			<div id="photonumber" class="fleft" title="photo number">
 				<strong><?=$i?></strong>
 			</div>
-			<div class="fleft upload-over-button" title="go to top">
-				<a href="#top">
-					<span><i class="fas fa-arrow-up"></i></span>
-				</a>
+			<div id="gototop" class="fleft" title="go to top">
+				<a href="#top">&#128285;</a>
 			</div>
-			<div class="fright upload-over-button" title="download">
+			<div id="d-arrow" class="fright" title="download">
 				<a href="container/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" download >
-					<span><i class="fas fa-download"></i></span>
+					<strong>&#8615;</strong>
 				</a>
 			</div>
-			<div class="fright upload-over-button" title="zoom">
-				<a href="container/project1/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" target="_blank">
-					<span><i class="fas fa-search-plus"></i></span>
-				</a>
+			<div id="zooom" class="fright" title="zoom">
+				<a href="container/project1/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" target="_blank">&#128270;</a>
 			</div>
-			<div class="fright upload-over-button" title="edit">
-				<!-- <a href="#"> -->
-					<span onclick="showNotes(this)" style="cursor: pointer;"><i class="far fa-edit"></i></span>
-				<!-- </a> -->
+			<div id="upload-over-plan" class="fright upload-over-button" title="">
+				<span class="upload-over-button" title="photo over photo" onclick="popup(<?=$i?>, 'photo')">
+					<span class="upload-over-right over-black"></span>
+					<span class="upload-over-left over-black"></span>
+				</span>
 			</div>
-			<div class="fright upload-over-button" title="">
-				<a href="#">
-					<span class="upload-over-button" title="photo over photo" onclick="popup(<?=$i?>, 'photo')">
-						<i class="far fa-clone"></i>
-					</span>
-				</a>
-			</div>
-			<div class="fright upload-over-button" title="">
-				<a href="#">
-					<span class="upload-over-button" title="photo over plan" onclick="popup(<?=$i?>, 'plan')">
-						<i class="fas fa-clone"></i>
-					</span>
-				</a>
+			<div id="upload-over-plan" class="fright upload-over-button" title="">
+				<span class="upload-over-button" title="photo over plan" onclick="popup(<?=$i?>, 'plan')">
+					<span class="upload-over-right over-white"></span>
+					<span class="upload-over-left over-black"></span>
+				</span>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -876,47 +793,6 @@ function imgSearchClicked(_this){
 		border-radius: 100%;
 		cursor: pointer;
     }
-	#dwld > div {	
-		margin-left: 2%;
-		font-size: 30px;
-		width: 10%;
-		margin-top: 3px;
-	}
-	#dwld > div a span{
-		color: white;
-	}
-	.textBox{
-		position: absolute;
-		z-index: 1000;
-		right: 0px;
-		bottom: 50px;
-		padding: 5px;
-		background-color: #333333;
-		display: none;
-	}
-	.textBox textarea{
-		margin: 0px;
-	}
 </style>
-<script type="text/javascript">
-	var fullWidth = document.body.clientWidth;
-	var aptCount = "<?=$nApartCount?>";
-	if( fullWidth < 769){
-		$("#centered ul").width(181 * aptCount);
-		$("a").eq(0).css("position", "relative");
-	}
-	function onNoteSave(_this){
-		var textBox = $(_this).parent();
-		textBox.hide();
-	}
-	function showNotes(_this){
-		var textBox = $(_this).parent().parent().parent().find(".textBox").eq(0);
-		if( textBox.is(':visible')){
-			textBox.hide();
-		} else{
-			textBox.show();
-		}
-	}
-</script>
 </html>
 

@@ -19,7 +19,6 @@ require_once __DIR__ . "/libInformation.php";
 
 foreach ($files as $value) {
 	$dirName = basename($value);
-
 }
 ?>
 <head>
@@ -60,6 +59,10 @@ foreach ($files as $value) {
 							<tr>
 								<td><label for="projectName">Project Name : </label></td>
 								<td><input class="form-control" type="text" id="projectName"/><br></td>
+								<td><label for="projectNumber">Project N<u>o</u> : </label></td>
+								<td><input class="form-control" type="text" id="projectNumber"/><br></td>
+							</tr>
+							<tr>
 								<td><label for="projectType">Project Type:</label></td>
 								<td>
 									<select id="projectType" class="form-control">
@@ -69,6 +72,8 @@ foreach ($files as $value) {
 										<option class="Residential">Residential</option>
 									</select>
 								</td>
+								<td><label>Constructor : </label></td>
+								<td><input type="text" class="form-control" id="constructor"></td>
 							</tr>
 							<tr>
 								<td><label>Location : </label></td>
@@ -90,27 +95,30 @@ foreach ($files as $value) {
 								</td>
 							</tr>
 							<tr>
-								<td><label>Constructor : </label></td>
-								<td><input type="text" class="form-control" id="constructor"></td>
 								<td><label>Project Manager : </label></td>
 								<td><input type="text" class="form-control" id="projectmanager"></td>
-							</tr>
-							<tr>
 								<td><label>Works Manager : </label></td>
 								<td><input type="text" class="form-control" id="worksmanager"></td>
-								<td><label>Photography : </label></td>
-								<td><input type="text" class="form-control" id="photography"></td>
 							</tr>
 							<tr>
+								<td><label>Photography : </label></td>
+								<td><input type="text" class="form-control" id="photography"></td>
 								<td><label>Building N<u>o</u> : </label></td>
 								<td><input type="text" class="form-control" id="buildingnumber"></td>
+							</tr>
+							<tr>
 								<td><label>Document Date : </label></td>
 								<td><input type="date" class="form-control" id="documentdate" value="<?= date("Y-m-d")?>"></td>
+								<td><label>Entrance N<u>o</u> : </label></td>
+								<td><input type="text" class="form-control" id="entrancenumber"></td>
+							</tr>
+							<tr>
+								<td colspan="4" style="text-align: right;">
+									<button onclick="onSaveProjectInfo()" class="btn btn-success">Save Project Info</button>
+								</td>
 							</tr>
 						</table>
-						<p style="text-align: right;">
-							<button onclick="onSaveProjectInfo()" class="btn btn-success">Save Project Info</button>
-						</p>
+						<!-- <p style="text-align: right;"></p> -->
 					</td>
 					<td class="vertical-top" style="padding: 10px;">
 						<span>
