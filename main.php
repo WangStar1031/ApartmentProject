@@ -38,7 +38,7 @@ if( $_SESSION['reparationUserName'] == ""){
 	<link rel="stylesheet" href="assets/css/topnav/toptable.css">
 	<link rel="stylesheet" href="assets/css/sidebar/toptable.css">
 	<link rel="stylesheet" href="assets/css/sidebar/content.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 	
 	<script src="assets/js/respond.min.js"></script>
@@ -473,6 +473,12 @@ foreach($files as $file){
 		line-height: 1em;
 		height: 2em;
 	}
+	@media only screen and (max-width: 768px) {
+		.uploadImgWnd, .uploadedImgWnd{
+			width: 100%;
+			z-index: 10000;
+		}
+	}
 </style>
 <div class="uploadImgWnd" style="display: none;">
 	<div class="imgBorder">
@@ -501,13 +507,13 @@ foreach($files as $file){
 						</tr>
 					</table>
 					<label>Shooting Time:</label>
-					<select>
+					<select id="ShootingTime">
 						<option>During Construction Works</option>
 						<option>During the handover</option>
 						<option>After the handover</option>
 					</select>
 					<label>Shooting Person</label>
-					<select>
+					<select id="ShootingPerson">
 						<option>Company representative</option>
 						<option>Contractor</option>
 						<option>Tenant</option>
@@ -522,8 +528,12 @@ foreach($files as $file){
 									<tr>
 										<td>
 											<select id="frequency">
-												<option>First Defect</option>
-												<option>Repeating Defect</option>
+												<option class="forDefects">First Defect</option>
+												<option class="forDefects">Repeating Defect</option>
+
+												<option class="forReparations">First Aid</option>
+												<option class="forReparations">Normal Repair</option>
+												<option class="forReparations">Additional Repair</option>
 											</select>
 										</td>
 										<td>
@@ -533,9 +543,13 @@ foreach($files as $file){
 									<tr>
 										<td>
 											<select id="origin">
-												<option>Works Defect</option>
-												<option>Material Defect</option>
-												<option>Element Malfunction</option>
+												<option class="forDefects">Works Defect</option>
+												<option class="forDefects">Material Defect</option>
+												<option class="forDefects">Element Malfunction</option>
+
+												<option class="forReparations">Works Defect</option>
+												<option class="forReparations">Material Defect</option>
+												<option class="forReparations">Item Replacement</option>
 											</select>
 										</td>
 										<td>
@@ -570,17 +584,17 @@ foreach($files as $file){
 							<td>
 								<table>
 									<tr>
-										<td>
-											<button>Reparation</button>
-											<button>Defect</button>
+										<td id="btnTypeGroup">
+											<button onclick="onReparation(this)">Reparation</button>
+											<button onclick="onDefect(this)" class="btn-success">Defect</button>
 										</td>
 									</tr>
 									<tr>
-										<td>Defect</td>
+										<td id="desc">Defect</td>
 									</tr>
 									<tr>
 										<td>
-											<input type="text" name="">
+											<input type="text" name="desc">
 										</td>
 									</tr>
 									<tr>
@@ -588,7 +602,7 @@ foreach($files as $file){
 									</tr>
 									<tr>
 										<td>
-											<textarea>	</textarea>
+											<textarea name="description"></textarea>
 										</td>
 									</tr>
 								</table>
@@ -769,13 +783,13 @@ function showImage(src, target){
 		console.log(e);
 		target.src = this.result;
 		var strHtml = "";
-			strHtml += '<div class="uploadedImgTitle">';
-				strHtml += '<img onclick="imgMinusClicked(this)" src="assets/images/minus.png">';
-				strHtml += '<img onclick="imgPlusClicked(this)" src="assets/images/plus.png">';
-				// strHtml += '<img onclick="imgSearchClicked(this)" src="assets/images/search.png">';
-				strHtml += '<div style="clear:both;"></div>';
-			strHtml += '</div>';
-			strHtml += '<img class="uploadedImg" style="width:100px; height:auto;" src="' + this.result + '">';
+			// strHtml += '<div class="uploadedImgTitle">';
+			// 	strHtml += '<img onclick="imgMinusClicked(this)" src="assets/images/minus.png">';
+			// 	strHtml += '<img onclick="imgPlusClicked(this)" src="assets/images/plus.png">';
+			// 	// strHtml += '<img onclick="imgSearchClicked(this)" src="assets/images/search.png">';
+			// 	strHtml += '<div style="clear:both;"></div>';
+			// strHtml += '</div>';
+			strHtml += '<img class="uploadedImg" style="width:74px; height:auto;" src="' + this.result + '">';
 		$(".uploadedImgPan").html(strHtml);
 		$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 		$(".uploadedImgPan").draggable();
@@ -789,9 +803,6 @@ function showImage(src, target){
 		$("input[name=Month]").val(month);
 		$("input[name=Day]").val(day);
 		fr.readAsDataURL(src.files[0]);
-		// console.log(src.files[0]);
-		// console.log( typeof lastModifiedDate);
-		// console.log(lastModifiedDate.getFullYear());
 	});
 }
 var src = document.getElementById("img_picker");
@@ -814,7 +825,20 @@ function SaveImage(){
 	var h = $(".uploadedImgPan .uploadedImg").height();
 	var pos = $(".uploadedImgPan").position();
 	var posRect = {left: pos.left, top: pos.top, width: w, height: h, parentWidth: pW, parentHeight: pH};
-	var infos = {ShootingDate: '2019-01-02', ShootingTime: 'During Construction Works'};
+	var year = $("input[name=Year]").val();
+	var month = $("input[name=Month]").val();
+	var day = $("input[name=Day]").val();
+	var ShootingDate = year + '-' + month + '-' + day;
+	var ShootingTime = $("#ShootingTime").val();
+	var ShootingPerson = $("#ShootingPerson").val();
+	var Frequency = $("#frequency").val();
+	var Origin = $("#origin").val();
+	var Structure = $("#structure").val();
+	var Level = $("#level").val();
+	var Type = $("#btnTypeGroup .btn-success").eq(0).text();
+	var Desc = $("input[name=desc]").val();
+	var Description = $("textarea[name=description]").val();
+	var infos = {Type: Type, ShootingDate: ShootingDate, ShootingTime: ShootingTime, ShootingPerson: ShootingPerson, };
 	$.post("api_process.php", {action: "imgUpload", apartNo: apartNo, idxPhoto: prevId, catPhoto: prevCat, idxGroup: idxGroup, strFileType: strFileType, imgSrc: srcImg, posRect: JSON.stringify(posRect), infos: JSON.stringify(infos)}, function(data){
 		console.log(data);
 		var response = JSON.parse(data);
@@ -824,23 +848,23 @@ function SaveImage(){
 	})
 }
 
-function popupGallery(){
-	$(".uploadedImgWnd").show();
-}
-function imgMinusClicked(_this){
-	console.log($(_this));
-	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
-	img.css({width: img.width() * 0.9});
-}
-function imgPlusClicked(_this){
-	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
-	img.css({width: img.width() * 1.1});
-}
-function imgSearchClicked(_this){
-	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
-	window.open(img.attr("src"), 'Image');
-	// img.css({width: img.width() * 1.1});
-}
+// function popupGallery(){
+// 	$(".uploadedImgWnd").show();
+// }
+// function imgMinusClicked(_this){
+// 	console.log($(_this));
+// 	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
+// 	img.css({width: img.width() * 0.9});
+// }
+// function imgPlusClicked(_this){
+// 	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
+// 	img.css({width: img.width() * 1.1});
+// }
+// function imgSearchClicked(_this){
+// 	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
+// 	window.open(img.attr("src"), 'Image');
+// 	// img.css({width: img.width() * 1.1});
+// }
 </script> 
 
 <style type="text/css">
@@ -905,6 +929,7 @@ function imgSearchClicked(_this){
 		$("#centered ul").width(181 * aptCount);
 		$("a").eq(0).css("position", "relative");
 	}
+	$(".forReparations").hide();
 	function onNoteSave(_this){
 		var textBox = $(_this).parent();
 		textBox.hide();
@@ -917,6 +942,29 @@ function imgSearchClicked(_this){
 			textBox.show();
 		}
 	}
+	function onReparation(_this){
+		$(_this).parent().find("button").removeClass("btn-success");
+		$(_this).addClass("btn-success");
+		$(".forDefects").hide();
+		$(".forReparations").show();
+		var sels = $(".forReparations").parent();
+		for( var i = 0; i < sels.length; i++){
+			sels.eq(0).find("option.forReparations").eq(0).prop("selected", true);
+		}
+		$("#desc").html("Reparation");
+	}
+	function onDefect(_this){
+		$(_this).parent().find("button").removeClass("btn-success");
+		$(_this).addClass("btn-success");
+		$(".forReparations").hide();
+		$(".forDefects").show();
+		var sels = $(".forDefects").parent();
+		for( var i = 0; i < sels.length; i++){
+			sels.eq(0).find("option.forDefects").eq(0).prop("selected", true);
+		}
+		$("#desc").html("Defect");
+	}
+
 </script>
 </html>
 
