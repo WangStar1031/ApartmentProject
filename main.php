@@ -39,6 +39,7 @@ if( $_SESSION['reparationUserName'] == ""){
 	<link rel="stylesheet" href="assets/css/sidebar/toptable.css">
 	<link rel="stylesheet" href="assets/css/sidebar/content.css">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="assets/css/main/main.css?<?=time()?>">
 
 	
 	<script src="assets/js/respond.min.js"></script>
@@ -253,8 +254,62 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
             <div class="popupBoxContent1">
                   <a href="javascript:void(0)" onclick="toggle_visibility('popupBox1');">x</a>	   
 	            <div id="reception-notes-container">		 
-		            <div id="reception-notes">			
-			            <div class="clear rec-title">קישור מהיר</div>
+		            <div id="reception-notes">
+		            	<div class="col-md-12 col-xs-12">
+		            		<div class="row" style="color: black;">
+		            			<div class="col-md-4 col-xs-4">
+		            				<div class="row">
+			            				<div style="background-color: #e68e52;">Notes</div>
+			            				<div class="col-md-12 col-mxs12" style="background-color: #ecb38b; height: 1000px;">
+			            					<div class="row">
+				            					<?php
+				            					$arrNotes = getAllNotes($projectInfo['Id'], $apartNo);
+				            					foreach ($arrNotes as $value) {
+				            						$idx = $value['PhotoIdx'];
+			            						?>
+			            						<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
+			            						<?php
+				            					}
+				            					?>
+			            					</div>
+			            				</div>
+		            				</div>
+		            			</div>
+		            			<div class="col-md-4 col-xs-4">
+		            				<div class="row">
+			            				<div style="background-color: #61d668;">Reparations</div>
+			            				<div style="background-color: #99ef9e; height: 1000px;">
+			            					<?php
+			            					$arrReparation = getAllReparations( $projectInfo['Id'], $apartNo);
+			            					foreach ($arrReparation as $value) {
+			            						$idx = $value['PhotoIdx'];
+		            						?>
+		            						<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
+		            						<?php
+			            					}
+			            					?>
+			            				</div>
+		            				</div>
+		            			</div>
+		            			<div class="col-md-4 col-xs-4">
+		            				<div class="row">
+			            				<div style="background-color: #d45555;">Defects</div>
+			            				<div style="background-color: #e88d8d; height: 1000px;">
+			            					<?php
+			            					$arrDefects = getAllDefects( $projectInfo['Id'], $apartNo);
+			            					foreach ($arrDefects as $value) {
+			            						$idx = $value['PhotoIdx'];
+		            						?>
+		            						<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
+		            						<?php
+			            					}
+			            					?>
+			            				</div>
+		            				</div>
+		            			</div>
+		            		</div>
+		            	</div>
+			            <!-- <div class="clear rec-title">קישור מהיר</div> -->
 <?php
 $files = [];
 $dir = __DIR__ . "/container/project1/ap" . $apartNo . "/project/plans/";
@@ -263,6 +318,7 @@ if( file_exists($dir)){
 }
 $i = 0;
 foreach($files as $file){
+	break;
 	if( $file == ".." || $file == ".")
 		continue;
 	$i++;
@@ -368,8 +424,13 @@ foreach($files as $file){
 			</div>
 		</div>
 		<div class="textBox">
-			<textarea id="text<?=$i?>"></textarea>
-			<button class="btn btn-success" onclick="onNoteSave(this)">Save</button>
+			<div>
+				<div style="float: left;" onclick="closeNote(this)">&#10006;</div>
+				<div style="float: right;">Notes</div>
+				<div style="clear: both;"></div>
+			</div>
+			<textarea id="text<?=$i?>" rows="3"></textarea><br>
+			<button class="btn-success" style="float: right; margin-top: 10px;" onclick="onNoteSave(this)">Save</button>
 		</div>
 		<div id="dwld">
 			<div class="fleft" title="photo number">
@@ -417,69 +478,6 @@ foreach($files as $file){
 <?php
 }
 ?>
-<style type="text/css">
-	.uploadImgWnd, .uploadedImgWnd{
-		position: fixed;
-		top: 5%;
-		left: 1%;
-		width: 42%;
-		margin: auto;
-		font-size: 0.8em;
-	}
-	.imgBorder, .contrlBorder{
-		border: 2px solid #aaa;
-		padding: 5px;
-		border-radius: 5px;
-		background: #e8e8e8;
-	}
-	.imgUpload{
-		width: 120px;
-		float: left;
-	}
-	.imgUpload img{
-		border: 1px solid;
-		/*width: 90%;*/
-		width: 120px;
-		margin: auto;
-		height: auto;
-		min-height: 120px;
-		min-width: 120px;
-	}
-	.imgUpload label{
-		font-size: 1em;
-		color: black;
-		border: 1px solid;
-	}
-	.infFields{
-		width: calc( 100% - 120px);
-		float: left;
-		color: black;
-	}
-	.infFields table, .infFields table input{
-		width: 100%;
-	}
-	.infFields label{
-		width: 100%;
-	}
-	.infFields label input{
-		text-align: left;
-	}
-	.uploadImgWnd input[type='text'], .uploadImgWnd textarea{
-		width: 100%;
-	}
-	.uploadImgWnd select{
-		width: 100%;
-		padding: 0px;
-		line-height: 1em;
-		height: 2em;
-	}
-	@media only screen and (max-width: 768px) {
-		.uploadImgWnd, .uploadedImgWnd{
-			width: 100%;
-			z-index: 10000;
-		}
-	}
-</style>
 <div class="uploadImgWnd" style="display: none;">
 	<div class="imgBorder">
 		<img src="container/project1/ap<?=$apartNo?>/project/photos/1pi.jpg">
@@ -611,9 +609,9 @@ foreach($files as $file){
 					</table>
 					<table>
 						<tr>
-							<td><input type="text" name=""></td>
+							<td><input type="text" name="worker"></td>
 							<td>Worker</td>
-							<td><input type="text" name=""></td>
+							<td><input type="text" name="contractor"></td>
 							<td>Contractor</td>
 						</tr>
 					</table>
@@ -629,11 +627,8 @@ foreach($files as $file){
 
 
     <div id="home-footer" class="header-footer-background footer-border">
-
         <div class="left footer-left"><h1>Concept and Design: <b>Sorel Alexander</b><br> <a href="http://www.watchwork.co.il" target="_blank"><b>© 2017 Watchwork</b></a><br> All Rights Rezerved</h1></div>
-
 	    <div class="left footer-left"><img src="assets/images/watchwork-logo.png"></div>
-
         <div class="left footer-left"><h1>054-2096602 <br> office@watchwork.net <br> <a href="http://www.watchwork.co.il" target="_blank"><b>www.watchwork.co.il</b></a></h1></div>	
 
 	    <div class="clear"></div>	
@@ -657,13 +652,6 @@ foreach($files as $file){
 
 	</div>
 </div>
-<style type="text/css">
-	#listPhotoModal .modal-body{
-		overflow-x: auto;
-		height: 400px;
-		margin-bottom: 10px;
-	}
-</style>
 
 <script>
 var apartNo = <?=$apartNo?>;
@@ -702,7 +690,7 @@ function uploadedPhotoDraw(){
 	var el = $('#img_picker');
 	el.val("");
 	$(".groupContainer").remove();
-	$.post("api_process.php", {action: "getUploadedInfo", apartNo: apartNo, idxPhoto: _id, catPhoto: _cat}, function(data){
+	$.post("api_process.php", {action: "getUploadedInfo", projectName: "project1", apartNo: apartNo, idxPhoto: _id, catPhoto: _cat}, function(data){
 		var infos = JSON.parse(data);
 		uploadedInfos = infos;
 		var strHtml = "";
@@ -838,8 +826,12 @@ function SaveImage(){
 	var Type = $("#btnTypeGroup .btn-success").eq(0).text();
 	var Desc = $("input[name=desc]").val();
 	var Description = $("textarea[name=description]").val();
-	var infos = {Type: Type, ShootingDate: ShootingDate, ShootingTime: ShootingTime, ShootingPerson: ShootingPerson, };
-	$.post("api_process.php", {action: "imgUpload", apartNo: apartNo, idxPhoto: prevId, catPhoto: prevCat, idxGroup: idxGroup, strFileType: strFileType, imgSrc: srcImg, posRect: JSON.stringify(posRect), infos: JSON.stringify(infos)}, function(data){
+	var Worker = $("input[name=worker]").val();
+	var Contractor = $("input[name=contractor]").val();
+
+	var infos = {ShootingDate: ShootingDate, ShootingTime: ShootingTime, ShootingPerson: ShootingPerson, Frequency: Frequency, Origin: Origin, Structure: Structure, Level: Level, Desc: Desc, Description: Description, Worker: Worker, Contractor: Contractor};
+	
+	$.post("api_process.php", {action: "imgUpload", projectName: "project1", apartNo: apartNo, idxPhoto: prevId, catPhoto: prevCat, idxGroup: idxGroup, Type: Type, strFileType: strFileType, imgSrc: srcImg, posRect: JSON.stringify(posRect), infos: JSON.stringify(infos)}, function(data){
 		console.log(data);
 		var response = JSON.parse(data);
 		if( response.message == "OK"){
@@ -847,81 +839,8 @@ function SaveImage(){
 		}
 	})
 }
-
-// function popupGallery(){
-// 	$(".uploadedImgWnd").show();
-// }
-// function imgMinusClicked(_this){
-// 	console.log($(_this));
-// 	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
-// 	img.css({width: img.width() * 0.9});
-// }
-// function imgPlusClicked(_this){
-// 	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
-// 	img.css({width: img.width() * 1.1});
-// }
-// function imgSearchClicked(_this){
-// 	var img = $(_this).parent().parent().find(".uploadedImg").eq(0);
-// 	window.open(img.attr("src"), 'Image');
-// 	// img.css({width: img.width() * 1.1});
-// }
 </script> 
 
-<style type="text/css">
-	.uploadedImgTitle{
-		width: 100%;
-		background-color: gray;
-	}
-	.uploadedImgPan{
-		/*padding: 10px;*/
-		z-index: 100;
-	}
-	.ui-state-highlight{
-		/*background-color: red;*/
-	}
-	.ui-droppable-hover{
-		border: 2px solid blue;
-		/*background-color: green;*/
-	}
-	.uploadedImgTitle img{
-		width: 15px;
-		height: 15px;
-		float: right;
-		cursor: pointer;
-	}
-	.groupContainer .photoCount{
-		color: white;
-		position: absolute;
-		right: 0px;
-		bottom: 0px;
-		background-color: black;
-		width: 1.5em;
-		height: 1.5em;
-		border-radius: 100%;
-		cursor: pointer;
-    }
-	#dwld > div {	
-		margin-left: 2%;
-		font-size: 30px;
-		width: 10%;
-		margin-top: 3px;
-	}
-	#dwld > div a span{
-		color: white;
-	}
-	.textBox{
-		position: absolute;
-		z-index: 1000;
-		right: 0px;
-		bottom: 50px;
-		padding: 5px;
-		background-color: #333333;
-		display: none;
-	}
-	.textBox textarea{
-		margin: 0px;
-	}
-</style>
 <script type="text/javascript">
 	var fullWidth = document.body.clientWidth;
 	var aptCount = "<?=$nApartCount?>";
@@ -931,16 +850,35 @@ function SaveImage(){
 	}
 	$(".forReparations").hide();
 	function onNoteSave(_this){
-		var textBox = $(_this).parent();
-		textBox.hide();
+		var textId = $(_this).parent().find("textarea").attr("Id");
+		var photoNumber = textId.replace("text", "");
+		var strNotes = $("#" + textId).val();
+		// var textBox = $(_this).parent();
+		// textBox.hide();
+
+		// $projectId = $projectInfo['Id'];
+		// $apartNo
+		$.post("api_process.php", {action: "updateNotes", projectName: "project1", apartNo: apartNo, photoNumber: photoNumber, strNotes: strNotes}, function(data){
+			if( data == "OK"){
+				alert("Saved.");
+			}
+		});
 	}
 	function showNotes(_this){
 		var textBox = $(_this).parent().parent().parent().find(".textBox").eq(0);
 		if( textBox.is(':visible')){
 			textBox.hide();
 		} else{
-			textBox.show();
+			var textId = $(_this).parent().parent().parent().find("textarea").attr("Id");
+			var photoNumber = textId.replace("text", "");
+			$.post("api_process.php", {action: "getNotes", projectName: "project1", apartNo: apartNo, photoNumber: photoNumber}, function(data){
+				$("#" + textId).val(data);
+				textBox.show();
+			});
 		}
+	}
+	function closeNote(_this){
+		$(_this).parent().parent().hide();
 	}
 	function onReparation(_this){
 		$(_this).parent().find("button").removeClass("btn-success");
@@ -964,7 +902,6 @@ function SaveImage(){
 		}
 		$("#desc").html("Defect");
 	}
-
 </script>
 </html>
 

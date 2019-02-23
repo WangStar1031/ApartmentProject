@@ -93,7 +93,7 @@
 	}
 	function getApratmentInfo( $_projectId){
 		global $db;
-		$sql = "SELECT * FROM apartmentinfo WHERE ProjectId='$_projectId'";
+		$sql = "SELECT * FROM apartmentinfo WHERE ProjectId='$_projectId' ORDER BY Id ASC";
 		$result = $db->select($sql);
 		return $result;
 	}
@@ -158,6 +158,118 @@
 		$sql = "DELETE FROM user WHERE UserEmail='$_UserEmail'";
 		$db->__exec__($sql);
 		echo "OK";
+	}
+	function getAllDefects($_projectId, $_aptNo){
+		global $db;
+		$sql = "SELECT * FROM defect_reparation WHERE ProjectId='$_projectId' AND ApartmentNumber='$_aptNo' AND TYPE='Defect' GROUP BY PhotoIdx";
+		$result = $db->select($sql);
+		if( $result == false)return [];
+		return $result;
+	}
+	function getAllReparations($_projectId, $_aptNo){
+		global $db;
+		$sql = "SELECT * FROM defect_reparation WHERE ProjectId='$_projectId' AND ApartmentNumber='$_aptNo' AND TYPE='Reparation' GROUP BY PhotoIdx";
+		$result = $db->select($sql);
+		if( $result == false)return [];
+		return $result;
+	}
+	function GetUploadedPhotos_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto){
+		global $db;
+		$projectInfo = getProjectInfo($_projectName);
+		// print_r($projectInfo);
+		if( $projectInfo == false)
+			return [];
+		$projectId = $projectInfo[0]['Id'];
+		$sql = "SELECT * FROM defect_reparation WHERE ProjectId='$projectId' AND ApartmentNumber='$_apartNo' AND PhotoIdx='$_idxPhoto' AND PhotoCat='$_catPhoto' ORDER BY idxGroup ASC";
+		// print_r($sql);
+		$result = $db->select($sql);
+		// print_r($result);
+		if( $result == false)
+			return [];
+		$groupId = -1;
+		$arrUploads = [];
+		foreach ($result as $value) {
+			if( $value['idxGroup'] != $groupId){
+				if( isset($newGroup)){
+					$arrUploads[] = $newGroup;
+				}
+				$newGroup = new \stdClass;
+				$groupId = $value['idxGroup'];
+				$newGroup->groupId = $groupId;
+				$newGroup->arrNodes = [];
+				$newGroup->posRect = json_decode($value['PosRect']);
+			}
+			$nodes = new \stdClass;
+			$nodes->fileUrl = $value['OriginalFilePath'];
+			$nodes->fileSUrl = $value['SmallFilePath'];
+			$nodes->info = json_decode($value['Infos']);
+			$newGroup->arrNodes[] = $nodes;
+		}
+		if( isset($newGroup)){
+			$arrUploads[] = $newGroup;
+		}
+		return $arrUploads;
+	}
+	function ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $originalName, $smallName, $_posRect, $_infos){
+		global $db;
+		$projectInfo = getProjectInfo($_projectName);
+		if( $projectInfo == false)
+			return false;
+		$projectId = $projectInfo[0]['Id'];
+		if( $_idxGroup == -1){
+			$sql = "SELECT * FROM defect_reparation WHERE ProjectId='$projectId' AND ApartmentNumber='$_apartNo' AND PhotoIdx='$_idxPhoto' AND PhotoCat='$_catPhoto' GROUP BY idxGroup ORDER BY idxGroup DESC";
+			$result = $db->select($sql);
+			if( $result == false){
+				$_idxGroup = 0;
+			} else{
+				$_idxGroup = $result[0]['idxGroup'] + 1;
+			}
+		}
+		$sql = "INSERT INTO defect_reparation(ProjectId, ApartmentNumber, PhotoIdx, PhotoCat, idxGroup, Type, OriginalFilePath, SmallFilePath, PosRect, Infos) VALUES(?,?,?,?,?,?,?,?,?,?)";
+		$stmt = $db->prepare($sql);
+		$stmt->execute([$projectId, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $originalName, $smallName, $_posRect, $_infos]);
+	}
+	function getAllNotes($_projectId, $_aptNo){
+		global $db;
+		$sql = "SELECT * FROM note WHERE ProjectId='$_projectId' AND ApartmentNumber='$_aptNo'";
+		$result = $db->select($sql);
+		if( $result == false)return [];
+		return $result;
+	}
+	function updateNotes($_projectName, $_apartNo, $_photoNumber, $_strNotes){
+		global $db;
+		$projectInfo = getProjectInfo($_projectName);
+		if( $projectInfo == false){
+			echo "Invalid Project Id.";
+			return;
+		}
+		$projectId = $projectInfo[0]['Id'];
+		$sql = "SELECT * FROM note WHERE ProjectId='$projectId' AND ApartmentNumber='$_apartNo' AND PhotoIdx='$_photoNumber'";
+		$result = $db->select($sql);
+		if( $result == false){
+			$sql = "INSERT INTO note(ProjectId, ApartmentNumber, PhotoIdx, Notes) VALUES(?,?,?,?)";
+			$stmt = $db->prepare($sql);
+			$stmt->execute([$projectId, $_apartNo, $_photoNumber, $_strNotes]);
+		} else{
+			$sql = "UPDATE note SET Notes=? WHERE ProjectId='$projectId' AND ApartmentNumber='$_apartNo' AND PhotoIdx='$_photoNumber'";
+			$stmt = $db->prepare($sql);
+			$stmt->execute([$_strNotes]);
+		}
+		echo "OK";
+	}
+	function getNotes($_projectName, $_apartNo, $_photoNumber){
+		global $db;
+		$projectInfo = getProjectInfo($_projectName);
+		if( $projectInfo == false){
+			return "";
+		}
+		$projectId = $projectInfo[0]['Id'];
+		$sql = "SELECT * FROM note WHERE ProjectId='$projectId' AND ApartmentNumber='$_apartNo' AND PhotoIdx='$_photoNumber'";
+		$result = $db->select($sql);
+		if( $result == false){
+			return "";
+		}
+		return $result[0]['Notes'];
 	}
 	function makeEncryptKey($_keyword){
 		if( $_keyword == "")return "";

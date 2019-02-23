@@ -12,20 +12,23 @@ function getApartmentInfo($_aptName){
 // 	file_put_contents($fName, json_encode($_projectInfo));
 // 	echo "OK";
 // }
-function ImageUpload($_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_strFileType, $_posRect, $_imgSrc, $_infos){
+function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos){
 	$_retVal = new \stdClass;
-	$dirName = "container/ap" . $_apartNo . "/project/uploaded/";
-	if( !file_exists($dirName)){
-		mkdir( $dirName, 0777);
+	$paDir = "container/" . $_projectName . "/uploaded/";
+	if( !file_exists($paDir)){
+		mkdir($paDir, 0777);
 	}
-	$dirName .= $_idxPhoto . "/";
-	if( !file_exists($dirName)){
-		mkdir( $dirName, 0777);
+	$dirName = $paDir . "/original/";
+	if( !file_exists(__DIR__ . "/" . $dirName)){
+		mkdir( __DIR__ . "/" . $dirName, 0777);
+	}
+	$sdirName = $paDir . "/small/";
+	if( !file_exists(__DIR__ . "/" . $sdirName)){
+		mkdir( __DIR__ . "/" . $sdirName, 0777);
 	}
 
-	$url = $dirName . date("Y-m-d-H-i-s", time()) . "." . $_strFileType;
-	// $url = "container/ap" . $_apartNo . "/project/uploaded/" . $_idxPhoto . "/" . $_catPhoto . "/" . $_idxGroup . "_" . date("Y-m-d-H-i-s", time()) . "." . $_strFileType;
-	$fName = __DIR__ . "/" . $url;
+	$url = date("Y-m-d-H-i-s", time()) . "." . $_strFileType;
+	$fName = __DIR__ . "/" . $dirName . $url;
 	$_retVal->type = $_strFileType;
 	$result = false;
 	$data = explode( ',', $_imgSrc );
@@ -33,44 +36,68 @@ function ImageUpload($_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_strFileTyp
 		$_retVal->message = "Invalid Image Format.";
 	} else{
 		$img = base64_decode($data[1]);
-		file_put_contents($fName, $img);
-		$_retVal->message = "OK";
-		$_retVal->fileName = $url;
+		file_put_contents($fName, $img); // save original image
 
-		$infFileName = $dirName . $_catPhoto . ".json";
-		$infContents = @file_get_contents($infFileName);
-		$jsonInf = [];
-		if( $infContents){
-			$jsonInf = json_decode($infContents);
+		switch($_strFileType){
+			case 'bmp': $src = imagecreatefromwbmp($fName); break;
+			case 'gif': $src = imagecreatefromgif($fName); break;
+			case 'jpg': $src = imagecreatefromjpeg($fName); break;
+			case 'png': $src = imagecreatefrompng($fName); break;
+			default : $src = false; break;
 		}
-		if( $_idxGroup == -1){
-			$newInf = new \stdClass;
-			$newInf->groupId = count($jsonInf);
-			$newInf->arrNodes = [];
-			$newNode = new \stdClass;
-			$newNode->fileUrl = $url;
-			$newNode->info = json_decode($_infos);
-			$newInf->arrNodes[] = $newNode;
-			$newInf->posRect = json_decode($_posRect);
-			$jsonInf[] = $newInf;
-			file_put_contents($infFileName, json_encode($jsonInf));
-		} else{
-			foreach ($jsonInf as $value) {
-				if( $value->groupId == $_idxGroup ){
-					$newNode = new \stdClass;
-					$newNode->fileUrl = $url;
-					$newNode->info = json_decode($_infos);
-					$value->arrNodes[] = $newNode;
-					file_put_contents($infFileName, json_encode($jsonInf));
-					break;
-				}
-			}
+		list($width, $height) = getimagesize($fName);
+		$_imgDst = imagecreatetruecolor(74, 74);
+		imagecopyresized($_imgDst, $src, 0, 0, 0, 0, 74, 74, $width, $height);
+		$dstImgPath = __DIR__ . "/" . $sdirName . $url;
+		switch($_strFileType){
+			case 'bmp': $retVal = imagewbmp( $_imgDst, $dstImgPath); break;
+			case 'gif': $retVal = imagegif( $_imgDst, $dstImgPath); break;
+			case 'jpg': $retVal = imagejpeg( $_imgDst, $dstImgPath); break;
+			case 'png': $retVal = imagepng( $_imgDst, $dstImgPath); break;
+			default : $retVal = false; break;
 		}
+
+		$_retVal->message = "OK";
+		ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $dirName . $url, $sdirName . $url, $_posRect, $_infos);
+
+		// $_retVal->fileName = $dirName . $url;
+
+		// $infFileName = $dirName . $_catPhoto . ".json";
+		// $infContents = @file_get_contents($infFileName);
+		// $jsonInf = [];
+		// if( $infContents){
+		// 	$jsonInf = json_decode($infContents);
+		// }
+		// if( $_idxGroup == -1){
+		// 	$newInf = new \stdClass;
+		// 	$newInf->groupId = count($jsonInf);
+		// 	$newInf->arrNodes = [];
+		// 	$newNode = new \stdClass;
+		// 	$newNode->fileUrl = $url;
+		// 	$newNode->info = json_decode($_infos);
+		// 	$newInf->arrNodes[] = $newNode;
+		// 	$newInf->posRect = json_decode($_posRect);
+		// 	$jsonInf[] = $newInf;
+		// 	file_put_contents($infFileName, json_encode($jsonInf));
+		// } else{
+		// 	foreach ($jsonInf as $value) {
+		// 		if( $value->groupId == $_idxGroup ){
+		// 			$newNode = new \stdClass;
+		// 			$newNode->fileUrl = $url;
+		// 			$newNode->info = json_decode($_infos);
+		// 			$value->arrNodes[] = $newNode;
+		// 			file_put_contents($infFileName, json_encode($jsonInf));
+		// 			break;
+		// 		}
+		// 	}
+		// }
 	}
 	echo json_encode($_retVal);
 }
-function GetUploadedPhotos( $_apartNo, $_idxPhoto, $_catPhoto){
-	$dirName = "container/ap" . $_apartNo . "/project/uploaded/";
+function GetUploadedPhotos($_projectName, $_apartNo, $_idxPhoto, $_catPhoto){
+	echo json_encode(GetUploadedPhotos_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto));
+	return;
+	// $dirName = "container/ap" . $_apartNo . "/project/uploaded/";
 	$dirName .= $_idxPhoto . "/";
 	$retVal = [];
 	$infFileName = $dirName . $_catPhoto . ".json";

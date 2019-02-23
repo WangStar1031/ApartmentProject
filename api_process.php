@@ -25,6 +25,9 @@ switch ($_action) {
 		echo json_encode(getApartments($_projectId));
 		break;
 	case "imgUpload":
+		$_projectName = '';
+		if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
+		if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
 		$_apartNo = '';
 		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
 		if( isset($_POST['apartNo'])) $_apartNo = $_POST['apartNo'];
@@ -37,24 +40,27 @@ switch ($_action) {
 		$_idxGroup = '';
 		if( isset($_GET['idxGroup'])) $_idxGroup = $_GET['idxGroup'];
 		if( isset($_POST['idxGroup'])) $_idxGroup = $_POST['idxGroup'];
-		$_idxGroup = '';
-		if( isset($_GET['idxGroup'])) $_idxGroup = $_GET['idxGroup'];
-		if( isset($_POST['idxGroup'])) $_idxGroup = $_POST['idxGroup'];
+		$_Type = '';
+		if( isset($_GET['Type'])) $_Type = $_GET['Type'];
+		if( isset($_POST['Type'])) $_Type = $_POST['Type'];
 		$_strFileType = '';
 		if( isset($_GET['strFileType'])) $_strFileType = $_GET['strFileType'];
 		if( isset($_POST['strFileType'])) $_strFileType = $_POST['strFileType'];
-		$_posRect = '';
-		if( isset($_GET['posRect'])) $_posRect = $_GET['posRect'];
-		if( isset($_POST['posRect'])) $_posRect = $_POST['posRect'];
 		$_imgSrc = '';
 		if( isset($_GET['imgSrc'])) $_imgSrc = $_GET['imgSrc'];
 		if( isset($_POST['imgSrc'])) $_imgSrc = $_POST['imgSrc'];
+		$_posRect = '';
+		if( isset($_GET['posRect'])) $_posRect = $_GET['posRect'];
+		if( isset($_POST['posRect'])) $_posRect = $_POST['posRect'];
 		$_infos = '';
 		if( isset($_GET['infos'])) $_infos = $_GET['infos'];
 		if( isset($_POST['infos'])) $_infos = $_POST['infos'];
-		ImageUpload($_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_strFileType, $_posRect, $_imgSrc, $_infos);
+		ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos);
 		break;
 	case "getUploadedInfo":
+		$_projectName = '';
+		if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
+		if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
 		$_apartNo = '';
 		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
 		if( isset($_POST['apartNo'])) $_apartNo = $_POST['apartNo'];
@@ -64,7 +70,7 @@ switch ($_action) {
 		$_catPhoto = '';
 		if( isset($_GET['catPhoto'])) $_catPhoto = $_GET['catPhoto'];
 		if( isset($_POST['catPhoto'])) $_catPhoto = $_POST['catPhoto'];
-		GetUploadedPhotos( $_apartNo, $_idxPhoto, $_catPhoto);
+		json_encode(GetUploadedPhotos($_projectName, $_apartNo, $_idxPhoto, $_catPhoto));
 		break;
 	case "newProject":
 		$_directoryName = '';
@@ -114,6 +120,33 @@ switch ($_action) {
 		if( isset($_GET['UserEmail'])) $_UserEmail = $_GET['UserEmail'];
 		if( isset($_POST['UserEmail'])) $_UserEmail = $_POST['UserEmail'];
 		removeUser($_UserEmail);
+		break;
+	case "updateNotes":
+		$_projectName = "";
+		if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
+		if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
+		$_apartNo = "";
+		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
+		if( isset($_POST['apartNo'])) $_apartNo = $_POST['apartNo'];
+		$_photoNumber = "";
+		if( isset($_GET['photoNumber'])) $_photoNumber = $_GET['photoNumber'];
+		if( isset($_POST['photoNumber'])) $_photoNumber = $_POST['photoNumber'];
+		$_strNotes = "";
+		if( isset($_GET['strNotes'])) $_strNotes = $_GET['strNotes'];
+		if( isset($_POST['strNotes'])) $_strNotes = $_POST['strNotes'];
+		updateNotes($_projectName, $_apartNo, $_photoNumber, $_strNotes);
+		break;
+	case "getNotes":
+		$_projectName = "";
+		if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
+		if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
+		$_apartNo = "";
+		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
+		if( isset($_POST['apartNo'])) $_apartNo = $_POST['apartNo'];
+		$_photoNumber = "";
+		if( isset($_GET['photoNumber'])) $_photoNumber = $_GET['photoNumber'];
+		if( isset($_POST['photoNumber'])) $_photoNumber = $_POST['photoNumber'];
+		echo getNotes($_projectName, $_apartNo, $_photoNumber);
 		break;
 	default:
 		break;
