@@ -203,6 +203,7 @@
 			$nodes->fileUrl = $value['OriginalFilePath'];
 			$nodes->fileSUrl = $value['SmallFilePath'];
 			$nodes->info = json_decode($value['Infos']);
+			$nodes->Type = $value['Type'];
 			$newGroup->arrNodes[] = $nodes;
 		}
 		if( isset($newGroup)){
