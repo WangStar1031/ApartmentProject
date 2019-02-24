@@ -640,7 +640,7 @@ foreach($files as $file){
 </div>
 
 </div>
-<div class="modal fade" role="dialog" id="listPhotoModal">
+<div class="modal fade" role="dialog" id="listPhotoModal" style="z-index: 10000;">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -670,6 +670,45 @@ function countClicked(_i){
 			strHtml += '<table style="width:100%;">';
 				strHtml += '<tr>';
 					strHtml += '<td style="width:60%;">';
+						strHtml += '<table>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.ShootingTime + '</td>';
+								strHtml += '<td>Shooting Time</td>';
+								strHtml += '<td rowspan="7">';
+								strHtml += '</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.Frequency + '</td>';
+								strHtml += '<td>Frequency</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.Origin + '</td>';
+								strHtml += '<td>Shooting Time</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.Structure + '</td>';
+								strHtml += '<td>Structure</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.Level + '</td>';
+								strHtml += '<td>Level</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.Contractor + '</td>';
+								strHtml += '<td>Contractor</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td>' + curNode.info.Worker + '</td>';
+								strHtml += '<td>Worker</td>';
+							strHtml += '</tr>';
+							strHtml += '<tr>';
+								strHtml += '<td colspan="3">';
+									strHtml += '<textarea></textarea>';
+								strHtml += '</td>';
+							strHtml += '</tr>';
+						strHtml += '</table>';
+					strHtml += '</td>';
+					strHtml += '<td style="width10%;">';
 					strHtml += '</td>';
 					strHtml += '<td style="width:40%;">';
 						strHtml += '<img src="' + curNode.fileUrl + '" style="width:100%;">';
