@@ -479,7 +479,10 @@ foreach($files as $file){
 }
 ?>
 <div class="uploadImgWnd" style="display: none;">
+	<!-- <div class="row">
+	</div> -->
 	<div class="imgBorder">
+		<div class="xBtn" onclick="closeUploadImgWnd()">X</div>
 		<img src="container/project1/ap<?=$apartNo?>/project/photos/1pi.jpg">
 		<div class="uploadedImgPan" style="position: absolute; top:10px;">
 		</div>
@@ -703,7 +706,7 @@ function countClicked(_i){
 							strHtml += '</tr>';
 							strHtml += '<tr>';
 								strHtml += '<td colspan="3">';
-									strHtml += '<textarea style="width:100%;" value="' + curNode.info.Description + '" readonly></textarea>';
+									strHtml += '<textarea style="width:100%;" value="' + curNode.info.Description + '" placeholder="Description" readonly></textarea>';
 								strHtml += '</td>';
 							strHtml += '</tr>';
 						strHtml += '</table>';
@@ -713,7 +716,7 @@ function countClicked(_i){
 					strHtml += '<td style="width:40%;">';
 						strHtml += '<table>';
 							strHtml += '<tr>';
-								strHtml += '<td><img src="' + curNode.fileUrl + '" style="width:100%;"></td>';
+								strHtml += '<td><img src="' + curNode.fileSUrl + '" style="width:100%;"></td>';
 							strHtml += '</tr>';
 							strHtml += '<tr>';
 								strHtml += '<td>';
@@ -761,7 +764,7 @@ function uploadedPhotoDraw(){
 			var height = parseInt(yScale * curInfo.posRect.height);
 			var arrNodes = curInfo.arrNodes;
 			var ptCount = arrNodes.length;
-			var lastImgPath = arrNodes[ ptCount - 1].fileUrl;
+			var lastImgPath = arrNodes[ ptCount - 1].fileSUrl;
 
 			strHtml += '<div class="groupContainer" style="top:' + top + 'px;left:' + left + 'px; position: absolute;" groupId="' + curInfo.groupId + '">';
 				strHtml += '<img src="' + lastImgPath + '" style="width:' + width + 'px; height: ' + height + 'px;">';
@@ -953,6 +956,9 @@ function SaveImage(){
 			sels.eq(0).find("option.forDefects").eq(0).prop("selected", true);
 		}
 		$("#desc").html("Defect");
+	}
+	function closeUploadImgWnd(){
+		$(".uploadImgWnd").hide();
 	}
 </script>
 </html>
