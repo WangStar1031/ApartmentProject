@@ -49,6 +49,7 @@ if( $_SESSION['reparationUserName'] == ""){
 	<script src="assets/js/jquery.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
 	<script src="assets/js/jquery-ui.js"></script>
+	<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="assets/js/topnav/plugins.js"></script>
 	<script src="assets/js/topnav/sly.min.js"></script>
 
@@ -138,6 +139,13 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 <div id="project-content">
     <div id="sub-header">
         <header class="pagespan">
+        	<div class="row">
+        		<div class="col-md-12 col-xs-4">
+        			<div class="col-md-8">
+        				
+        			</div>
+        		</div>
+        	</div>
         	<table class="table-bordered" style="width: 100%">
         		<tr>
         			<td>
@@ -835,7 +843,7 @@ function showImage(src, target){
 			strHtml += '<img class="uploadedImg" style="width:74px; height:auto;" src="' + this.result + '">';
 		$(".uploadedImgPan").html(strHtml);
 		$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
-		$(".uploadedImgPan").draggable();
+		$(".uploadedImgPan").draggable(); 
 	};
 	src.addEventListener("change", function(){
 		var lastModifiedDate = src.files[0].lastModifiedDate;
