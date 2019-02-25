@@ -33,6 +33,7 @@ foreach ($files as $value) {
 <link rel="stylesheet" type="text/css" href="./assets/css/main/admin.css?<?=time()?>">
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <a href="logout.php"><button class="btn btn-danger" style="margin: 10px;">Log out</button></a>
+<a href="main.php"><button class="btn btn-primary" style="margin: 10px;">Go to Main</button></a>
 <style type="text/css">
 	.mainTab table{
 		width: 100%;
