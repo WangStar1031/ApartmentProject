@@ -152,34 +152,34 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
         				<table style="width: 100%">
         					<tr>
         						<td id="projectNumber"><?=$projectInfo['ProjectNumber']?></td>
-        						<td><label>N<u>o</u>.</label></td>
+        						<td><label> מס' </label></td>
         						<td colspan="2" id="projectType"><?=$projectInfo['ProjectType']?></td>
-        						<td><label>Type</label></td>
+        						<td><label> סוג </label></td>
         						<td colspan="2" id="projectName"><?=$projectInfo['ProjectName']?></td>
-        						<td><label>Name</label></td>
-        						<td>Project</td>
+        						<td><label> שם </label></td>
+        						<td> פרויקט </td>
         					</tr>
         					<tr>
         						<td id="addressNo"><?=$projectInfo['No']?></td>
-        						<td><label>N<u>o</u>.</label></td>
+        						<td><label> מס' </label></td>
         						<td colspan="2" id="addressStreet"><?=$projectInfo['Street']?></td>
-        						<td><label>Street</label></td>
+        						<td><label> רחוב </label></td>
         						<td id="addressCity"><?=$projectInfo['City']?></td>
-        						<td><label>City</label></td>
+        						<td><label> יישוב </label></td>
         						<td id="addressZone"><?=$projectInfo['Zone']?></td>
-        						<td><label>Zone</label></td>
+        						<td><label> אזור </label></td>
         					</tr>
         					<tr>
         						<td colspan="3" id="projectManager"><?=$projectInfo['ProjectManager']?></td>
-        						<td colspan="2"><label>ProjectManger</label></td>
+        						<td colspan="2"><label> מנהל פרויקט </label></td>
         						<td colspan="2" id="constructor"><?=$projectInfo['Constructor']?></td>
-        						<td colspan="2"><label>Contractor</label></td>
+        						<td colspan="2"><label> קבלן </label></td>
         					</tr>
         					<tr>
         						<td colspan="3" id="photography"><?=$projectInfo['Photography']?></td>
-        						<td colspan="2"><label>Photography</label></td>
+        						<td colspan="2"><label> צילום </label></td>
         						<td colspan="2" id="worksManager"><?=$projectInfo['WorksManager']?></td>
-        						<td colspan="2"><label>Works Manager</label></td>
+        						<td colspan="2"><label> מנהל עבודה </label></td>
         					</tr>
         				</table>
         			</td>
@@ -187,16 +187,16 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
         				<table style="width: 100%">
         					<tr>
         						<td colspan="2" id="buildingNo"><?=$projectInfo['BuildingNumber']?></td>
-        						<td><label>Building<br>No. / Name</label></td>
+        						<td><label>בניין </label></td>
         					</tr>
         					<tr>
         						<td colspan="2" id="entranceNumber"><?=$projectInfo['EntranceNumber']?></td>
-        						<td><label>Entrance<br>No. / Name</label></td>
+        						<td><label>כניסה </label></td>
         					</tr>
         					<tr>
         						<td id="documentMonth"><?=$documentMonth?></td>
         						<td id="documentYear"><?=$documentYear?></td>
-        						<td><label>Documentation<br>Date</label></td>
+        						<td><label> תאריך תיעוד </label></td>
         					</tr>
         				</table>
         			</td>
@@ -677,10 +677,10 @@ function countClicked(_i){
 	var strHtml = "";
 	for( var i = 0; i < curInfo.arrNodes.length; i++){
 		var curNode = curInfo.arrNodes[i];
-		strHtml += '<div style="padding: 5px;">';
+		strHtml += '<div style="padding: 5px;" id="imgId' + curNode.Id + '">';
 			strHtml += '<table style="width:100%;">';
 				strHtml += '<tr>';
-					strHtml += '<td style="width:60%;">';
+					strHtml += '<td style="width:50%;">';
 						strHtml += '<table>';
 							strHtml += '<tr>';
 								strHtml += '<td>' + curNode.info.ShootingTime + '</td>';
@@ -719,7 +719,10 @@ function countClicked(_i){
 							strHtml += '</tr>';
 						strHtml += '</table>';
 					strHtml += '</td>';
-					strHtml += '<td style="width: 10%;">';
+					strHtml += '<td style="width: 10%; vertical-align: text-bottom;">';
+						strHtml += '<div><a target="_blank" href="' + curNode.fileUrl + '"><i class="fas fa-search-plus"></i></a></div>';
+						strHtml += '<div><a href="#" onclick="editDetails(this)"><i class="fas fa-pencil-alt"></i></a></div>';
+						strHtml += '<div><a href="#" onclick="removeImage(' + curNode.Id + ')"><i class="fas fa-trash-alt"></i></a></div>';
 					strHtml += '</td>';
 					strHtml += '<td style="width:40%;">';
 						strHtml += '<table>';
@@ -967,6 +970,22 @@ function SaveImage(){
 	}
 	function closeUploadImgWnd(){
 		$(".uploadImgWnd").hide();
+	}
+	function editDetails(_this){
+		console.log(_this);
+	}
+	function removeImage(_idx){
+		var r = confirm("Are you sure remove this?");
+		if( r == true){
+			$.post("api_process.php", {action: "removeUploadedImg", idx : _idx}, function(data){
+				// if( data == "OK"){
+					$("#imgId" + _idx).remove();
+				// }
+			});
+			// var tr = $(_this).parent().parent().parent().parent().parent().parent();
+			// console.log(tr.attr("imgId"));
+			// console.log("removeItem:", $(_this).parent().parent().parent());
+		}
 	}
 </script>
 </html>
