@@ -57,6 +57,12 @@ switch ($_action) {
 		if( isset($_POST['infos'])) $_infos = $_POST['infos'];
 		ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos);
 		break;
+	case "removeUploadedImg":
+		$_idx = '';
+		if( isset($_GET['idx'])) $_idx = $_GET['idx'];
+		if( isset($_POST['idx'])) $_idx = $_POST['idx'];
+		echo(removeUploadedImg($_idx));
+		break;
 	case "getUploadedInfo":
 		$_projectName = '';
 		if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];

@@ -680,7 +680,7 @@ function countClicked(_i){
 		strHtml += '<div style="padding: 5px;" id="imgId' + curNode.Id + '">';
 			strHtml += '<table style="width:100%;">';
 				strHtml += '<tr>';
-					strHtml += '<td style="width:50%;">';
+					strHtml += '<td style="width:60%;">';
 						strHtml += '<table>';
 							strHtml += '<tr>';
 								strHtml += '<td>' + curNode.info.ShootingTime + '</td>';
@@ -721,10 +721,10 @@ function countClicked(_i){
 					strHtml += '</td>';
 					strHtml += '<td style="width: 10%; vertical-align: text-bottom;">';
 						strHtml += '<div><a target="_blank" href="' + curNode.fileUrl + '"><i class="fas fa-search-plus"></i></a></div>';
-						strHtml += '<div><a href="#" onclick="editDetails(this)"><i class="fas fa-pencil-alt"></i></a></div>';
+						// strHtml += '<div><a href="#" onclick="editDetails(this)"><i class="fas fa-pencil-alt"></i></a></div>';
 						strHtml += '<div><a href="#" onclick="removeImage(' + curNode.Id + ')"><i class="fas fa-trash-alt"></i></a></div>';
 					strHtml += '</td>';
-					strHtml += '<td style="width:40%;">';
+					strHtml += '<td style="width:30%;">';
 						strHtml += '<table>';
 							strHtml += '<tr>';
 								strHtml += '<td><img src="' + curNode.fileSUrl + '" style="width:100%;"></td>';
@@ -978,9 +978,10 @@ function SaveImage(){
 		var r = confirm("Are you sure remove this?");
 		if( r == true){
 			$.post("api_process.php", {action: "removeUploadedImg", idx : _idx}, function(data){
-				// if( data == "OK"){
+				if( data == "OK"){
 					$("#imgId" + _idx).remove();
-				// }
+					uploadedPhotoDraw();
+				}
 			});
 			// var tr = $(_this).parent().parent().parent().parent().parent().parent();
 			// console.log(tr.attr("imgId"));

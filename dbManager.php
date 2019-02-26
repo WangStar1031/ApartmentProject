@@ -173,6 +173,25 @@
 		if( $result == false)return [];
 		return $result;
 	}
+	function removeUploadedImg($_idx){
+		global $db;
+		$sql = "SELECT * FROM defect_reparation WHERE Id='$_idx'";
+		$result = $db->select($sql);
+		if( $result == false){
+			return "Invalid Index.";
+		}
+		$orgFName = $result[0]['OriginalFilePath'];
+		$smlFName = $result[0]['SmallFilePath'];
+		if( file_exists(__DIR__ . "/" . $orgFName)){
+			unlink(__DIR__ . "/" . $orgFName);
+		}
+		if( file_exists(__DIR__ . "/" . $smlFName)){
+			unlink(__DIR__ . "/" . $smlFName);
+		}
+		$sql = "DELETE FROM defect_reparation WHERE Id='$_idx'";
+		$db->__exec__($sql);
+		return "OK";
+	}
 	function GetUploadedPhotos_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto){
 		global $db;
 		$projectInfo = getProjectInfo($_projectName);
@@ -204,6 +223,7 @@
 			$nodes->fileSUrl = $value['SmallFilePath'];
 			$nodes->info = json_decode($value['Infos']);
 			$nodes->Type = $value['Type'];
+			$nodes->Id = $value['Id'];
 			$newGroup->arrNodes[] = $nodes;
 		}
 		if( isset($newGroup)){

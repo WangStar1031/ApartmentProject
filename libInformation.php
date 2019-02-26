@@ -18,11 +18,11 @@ function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGrou
 	if( !file_exists($paDir)){
 		mkdir($paDir, 0777);
 	}
-	$dirName = $paDir . "/original/";
+	$dirName = $paDir . "original/";
 	if( !file_exists(__DIR__ . "/" . $dirName)){
 		mkdir( __DIR__ . "/" . $dirName, 0777);
 	}
-	$sdirName = $paDir . "/small/";
+	$sdirName = $paDir . "small/";
 	if( !file_exists(__DIR__ . "/" . $sdirName)){
 		mkdir( __DIR__ . "/" . $sdirName, 0777);
 	}
