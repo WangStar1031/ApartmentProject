@@ -1120,6 +1120,7 @@ function SaveImage(){
 		$('#wraperr').css('top', nRealTop);
 		$("#wraperr").css('width',$("#wraperr").parent().width());
 	});
+	$("#centered").scrollLeft($("#centered ul li").eq("<?=$apartNo - 1?>").position().left);
 </script>
 </html>
 
