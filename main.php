@@ -1098,9 +1098,10 @@ function SaveImage(){
 	function setNavTop() {
 		$('#wraperr').css('position','');
 		var nScrollTop = $("#project-container").scrollTop();
-		console.log("setNavTop nTop : ", nTop , "  nScrollTop : ", nScrollTop);
 		var nRealTop = Math.max(0, nTop - nScrollTop);
-		$('#wraperr').css('position','absolute');
+		if( nRealTop == 0){
+			$('#wraperr').css('position','absolute');
+		}
 		$('#wraperr').css('z-index', 1000);
 		$('#wraperr').css('top', nRealTop);
 		$("#wraperr").css('width',$("#wraperr").parent().width());
@@ -1109,12 +1110,12 @@ function SaveImage(){
 		setNavTop();
 	});
 	$(window).scroll(function(){
-		console.log("scrolled.");
 		$('#wraperr').css('position','');
 		var nScrollTop = $(document).scrollTop();
-		console.log("touchmove nTop : ", nTop , "  nScrollTop : ", nScrollTop);
 		var nRealTop = Math.max(nScrollTop, nTop);
-		$('#wraperr').css('position','absolute');
+		if( nRealTop != nTop){
+			$('#wraperr').css('position','absolute');
+		}
 		$('#wraperr').css('z-index', 1000);
 		$('#wraperr').css('top', nRealTop);
 		$("#wraperr").css('width',$("#wraperr").parent().width());
