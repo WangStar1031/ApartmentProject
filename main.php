@@ -140,13 +140,94 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
     <div id="sub-header">
         <header class="pagespan">
         	<div class="row">
-        		<div class="col-md-12 col-xs-4">
-        			<div class="col-md-8">
-        				
+        		<div class="col-lg-12" id="mainHeader">
+        			<div class="row">
+						<table class="col-lg-12">
+							<tr>
+								<td class="col-lg-8">
+									<table class="col-lg-12">
+										<tr>
+											<td colspan="2" id="projectType"><?=$projectInfo['ProjectType']?></td>
+											<td><label>סוג  </label></td>
+											<td id="projectName"><?=$projectInfo['ProjectName']?></td>
+											<td><label> שם </label></td>
+											<td> פרויקט </td>
+										</tr>
+										<tr>
+											<td id="addressNo"><?=$projectInfo['No']?></td>
+											<td><label> מס  </label></td>
+											<td id="addressStreet"><?=$projectInfo['Street']?></td>
+											<td><label> רחוב </label></td>
+											<td id="addressCity"><?=$projectInfo['City']?></td>
+											<td><label> יישוב </label></td>
+										</tr>
+										<tr>
+											<td colspan="2" id="photography"><?=$projectInfo['Photography']?></td>
+											<td><label> צילום </label></td>
+											<td id="documentMonth"><?=$documentMonth?></td>
+											<td id="documentYear"><?=$documentYear?></td>
+											<td><label> תאריך תיעוד </label></td>
+										</tr>
+									</table>
+								</td>
+								<td class="col-lg-4">
+									<table class="col-lg-12">
+										<tr>
+											<td id="buildingNo"><?=$projectInfo['BuildingNumber']?></td>
+											<td><label> בניין </label></td>
+										</tr>
+										<tr>
+											<td id="entranceNumber"><?=$projectInfo['EntranceNumber']?></td>
+											<td><label> כניסה </label></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
         			</div>
         		</div>
+        		<div class="col-xs-12" id="mobileHeader" style="display: none;">
+					<table class="col-xs-12">
+						<tr>
+							<td>
+								<table class="col-xs-12">
+									<tr>
+										<td><?=$projectInfo['ProjectName']?></td>
+										<td><label> שם </label></td>
+										<td> פרויקט </td>
+									</tr>
+									<tr>
+										<td colspan="2"><?=$projectInfo['ProjectType']?></td>
+										<td><label> סוג </label></td>
+									</tr>
+									<tr>
+										<td colspan="2"><?=$projectInfo['City']?></td>
+										<td><label> יישוב </label></td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table class="col-xs-12">
+									<tr>
+										<td colspan="2"><?=$projectInfo['BuildingNumber']?></td>
+										<td><label> בניין </label></td>
+									</tr>
+									<tr>
+										<td colspan="2"><?=$projectInfo['EntranceNumber']?></td>
+										<td><label> כניסה </label></td>
+									</tr>
+									<tr>
+										<td><?=$documentMonth?></td>
+										<td><?=$documentYear?></td>
+										<td><label> תאריך תיעוד </label></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+        		</div>
         	</div>
-        	<table class="table-bordered" style="width: 100%">
+        	<table class="table-bordered" style="width: 100%; display: none;">
         		<tr>
         			<td>
         				<table style="width: 100%">
@@ -507,7 +588,7 @@ foreach($files as $file){
 		<div class="infFields col-md-12" style="text-align: right;">
 			<div class="row">
 				<div class="col-md-5">
-					<label>Shooting Date:</label>
+					<label> תאריך צילום :</label><!-- Shooting Date -->
 					<table>
 						<tr>
 							<td><input type="text" name="Day" placeholder="Day"></td>
@@ -515,17 +596,18 @@ foreach($files as $file){
 							<td><input type="text" name="Year" placeholder="Year"></td>
 						</tr>
 					</table>
-					<label>Shooting Time:</label>
+					<label> תקופה :</label><!-- Shooting Time -->
 					<select id="ShootingTime">
-						<option>During Construction Works</option>
-						<option>During the handover</option>
-						<option>After the handover</option>
+						<option> במהלך הבנייה </option><!-- During Construction Works -->
+						<option> במהלך המסירה </option><!-- During the handover -->
+						<option> בתקופת האחריות </option><!-- After the handover in guarantee -->
+						<option> מחוץ תקופת האחריות </option><!-- After guarantee -->
 					</select>
-					<label>Shooting Person</label>
+					<label> המתלונן </label><!-- Shooting Person -->
 					<select id="ShootingPerson">
-						<option>Company representative</option>
-						<option>Contractor</option>
-						<option>Tenant</option>
+						<option> נציג החברה </option><!-- Representative -->
+						<option> מפקח </option><!-- Contractor -->
+						<option> דייר </option><!-- Tenant -->
 					</select>
 					<button onclick="SaveImage()">Save</button>
 				</div>
@@ -537,56 +619,47 @@ foreach($files as $file){
 									<tr>
 										<td>
 											<select id="frequency">
-												<option class="forDefects">First Defect</option>
-												<option class="forDefects">Repeating Defect</option>
+												<option class="forDefects"> תקלה ראשונה </option><!-- First Defect -->
+												<option class="forDefects"> תקלה חוזרת </option><!-- Repeating Defect -->
 
-												<option class="forReparations">First Aid</option>
-												<option class="forReparations">Normal Repair</option>
-												<option class="forReparations">Additional Repair</option>
+												<option class="forReparations"> עזרה ראשונה </option><!-- First Aid -->
+												<option class="forReparations"> תיקון רגיל </option><!-- Normal Repair -->
+												<option class="forReparations"> תיקון נוסף </option><!-- Additional Repair -->
 											</select>
 										</td>
-										<td>
-											Frequency
-										</td>
+										<td> תדירות </td><!-- Frequency -->
 									</tr>
 									<tr>
 										<td>
 											<select id="origin">
-												<option class="forDefects">Works Defect</option>
-												<option class="forDefects">Material Defect</option>
-												<option class="forDefects">Element Malfunction</option>
+												<option class="forDefects"> פגמים עבודה </option><!-- Works Defect -->
+												<option class="forDefects"> פגמים בחומר </option><!-- Material Defect -->
+												<option class="forDefects"> תקלה במכשיר </option><!-- Device Malfunction -->
 
-												<option class="forReparations">Works Defect</option>
-												<option class="forReparations">Material Defect</option>
-												<option class="forReparations">Item Replacement</option>
+												<option class="forReparations"> תיקון פגם עבודה </option><!-- Works Defect -->
+												<option class="forReparations"> תיקון פגם בחומר </option><!-- Material Defect -->
+												<option class="forReparations"> החלפת מכשיר </option><!-- Item Replacement -->
 											</select>
 										</td>
-										<td>
-											Origin
-										</td>
+										<td> מקור </td><!-- Origin -->
 									</tr>
 									<tr>
 										<td>
 											<select id="structure">
-												<option>Structural Defect</option>
-												<option>Non-Structural Defect</option>
+												<option> מבני </option><!-- Structural Defect -->
+												<option> לא מבני </option><!-- Non-Structural Defect -->
 											</select>
 										</td>
-										<td>
-											Structure
-										</td>
+										<td> המבנה </td><!-- Structure -->
 									</tr>
 									<tr>
 										<td>
 											<select id="level">
-												<option>Minor</option>
-												<option>Moderate</option>
-												<option>Serious</option>
+												<option> דחוף </option><!-- Urgent -->
+												<option> לא דחוף </option><!-- Not urgent -->
 											</select>
 										</td>
-										<td>
-											Level
-										</td>
+										<td> חירום </td><!-- Level -->
 									</tr>
 								</table>
 							</td>
@@ -594,12 +667,12 @@ foreach($files as $file){
 								<table>
 									<tr>
 										<td id="btnTypeGroup">
-											<button onclick="onReparation(this)">Reparation</button>
-											<button onclick="onDefect(this)" class="btn-success">Defect</button>
+											<button onclick="onReparation(this)"> תיקונים </button><!-- Reparation -->
+											<button onclick="onDefect(this)" class="btn-success"> תקלות </button> <!-- Defect -->
 										</td>
 									</tr>
 									<tr>
-										<td id="desc">Defect</td>
+										<td id="desc"> פגם </td> <!-- Defect -->
 									</tr>
 									<tr>
 										<td>
@@ -607,7 +680,7 @@ foreach($files as $file){
 										</td>
 									</tr>
 									<tr>
-										<td>Description</td>
+										<td> תיאור </td><!-- Description -->
 									</tr>
 									<tr>
 										<td>
@@ -621,9 +694,9 @@ foreach($files as $file){
 					<table>
 						<tr>
 							<td><input type="text" name="worker"></td>
-							<td>Worker</td>
+							<td> עובד </td><!-- Worker -->
 							<td><input type="text" name="contractor"></td>
-							<td>Contractor</td>
+							<td> קבלן </td><!-- Contractor -->
 						</tr>
 					</table>
 				</div>
@@ -666,11 +739,12 @@ foreach($files as $file){
 
 <script>
 var apartNo = <?=$apartNo?>;
+var prevId = -1, prevCat = "";
+var uploadedInfos = [];
+
 function myFunction() {
     location.reload();
 }
-var prevId = -1, prevCat = "";
-var uploadedInfos = [];
 function countClicked(_i){
 	var curInfo = uploadedInfos[_i];
 	console.log(curInfo);
@@ -906,24 +980,31 @@ function SaveImage(){
 	})
 }
 </script> 
-
+<style type="text/css">
+	.mobile_logout{
+		width: 100%;
+		/*height: 1em;*/
+		text-align: right;
+		color: white;
+		background-color: black;
+		margin: 0px !important;
+	}
+</style>
 <script type="text/javascript">
 	var fullWidth = document.body.clientWidth;
 	var aptCount = "<?=$nApartCount?>";
 	if( fullWidth < 769){
 		$("#centered ul").width(181 * aptCount);
 		$("a").eq(0).css("position", "relative");
+		$("a").eq(0).find("button").addClass("mobile_logout").removeClass("btn-danger").removeClass("btn");
+		$("#mainHeader").hide();
+		$("#mobileHeader").show();
 	}
 	$(".forReparations").hide();
 	function onNoteSave(_this){
 		var textId = $(_this).parent().find("textarea").attr("Id");
 		var photoNumber = textId.replace("text", "");
 		var strNotes = $("#" + textId).val();
-		// var textBox = $(_this).parent();
-		// textBox.hide();
-
-		// $projectId = $projectInfo['Id'];
-		// $apartNo
 		$.post("api_process.php", {action: "updateNotes", projectName: "project1", apartNo: apartNo, photoNumber: photoNumber, strNotes: strNotes}, function(data){
 			if( data == "OK"){
 				alert("Saved.");
@@ -955,7 +1036,7 @@ function SaveImage(){
 		for( var i = 0; i < sels.length; i++){
 			sels.eq(0).find("option.forReparations").eq(0).prop("selected", true);
 		}
-		$("#desc").html("Reparation");
+		$("#desc").html("תיקון");//Reparation
 	}
 	function onDefect(_this){
 		$(_this).parent().find("button").removeClass("btn-success");
@@ -966,7 +1047,7 @@ function SaveImage(){
 		for( var i = 0; i < sels.length; i++){
 			sels.eq(0).find("option.forDefects").eq(0).prop("selected", true);
 		}
-		$("#desc").html("Defect");
+		$("#desc").html("פגם");//Defect
 	}
 	function closeUploadImgWnd(){
 		$(".uploadImgWnd").hide();
@@ -983,9 +1064,6 @@ function SaveImage(){
 					uploadedPhotoDraw();
 				}
 			});
-			// var tr = $(_this).parent().parent().parent().parent().parent().parent();
-			// console.log(tr.attr("imgId"));
-			// console.log("removeItem:", $(_this).parent().parent().parent());
 		}
 	}
 </script>
