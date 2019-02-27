@@ -135,50 +135,69 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 	#sub-header table table label{
 		background-color: #ccc;
 	}
+	#mobileHeader table table tr, #mainHeader table table tr{
+		border: 1px solid
+	}
+
+	#mobileHeader > div > table > tbody > tr > td, #mainHeader > div > table > tbody > tr > td{
+		display: table-cell;
+		vertical-align: top;
+		height: 100px;
+	}
+	#mobileHeader > div > table td table, #mainHeader > div > table td table{
+		height: 100%;
+	}
+	#mobileHeader > div > table td table label, #mainHeader > div > table td table label{
+		/*height: 100%;*/
+		vertical-align: middle;
+	}
+	.forLabel{
+		background-color: #ccc;
+	}
 </style>
 <div id="project-content">
     <div id="sub-header">
         <header class="pagespan">
         	<div class="row">
         		<div class="col-lg-12" id="mainHeader">
-        			<div class="row">
-						<table class="col-lg-12">
+        			<div class="">
+						<table style="width: 100%;">
 							<tr>
-								<td class="col-lg-8">
+								<td style="width: 70%;">
 									<table class="col-lg-12">
 										<tr>
 											<td colspan="2" id="projectType"><?=$projectInfo['ProjectType']?></td>
-											<td><label>סוג  </label></td>
+											<td class="forLabel"><label>סוג  </label></td>
 											<td id="projectName"><?=$projectInfo['ProjectName']?></td>
-											<td><label> שם </label></td>
+											<td class="forLabel"><label> שם </label></td>
 											<td> פרויקט </td>
 										</tr>
 										<tr>
 											<td id="addressNo"><?=$projectInfo['No']?></td>
-											<td><label> מס  </label></td>
+											<td class="forLabel"><label> מס  </label></td>
 											<td id="addressStreet"><?=$projectInfo['Street']?></td>
-											<td><label> רחוב </label></td>
+											<td class="forLabel"><label> רחוב </label></td>
 											<td id="addressCity"><?=$projectInfo['City']?></td>
-											<td><label> יישוב </label></td>
+											<td class="forLabel"><label> יישוב </label></td>
 										</tr>
 										<tr>
 											<td colspan="2" id="photography"><?=$projectInfo['Photography']?></td>
-											<td><label> צילום </label></td>
+											<td class="forLabel"><label> צילום </label></td>
 											<td id="documentMonth"><?=$documentMonth?></td>
 											<td id="documentYear"><?=$documentYear?></td>
-											<td><label> תאריך תיעוד </label></td>
+											<td class="forLabel"><label> תאריך תיעוד </label></td>
 										</tr>
 									</table>
 								</td>
-								<td class="col-lg-4">
+								<td style="width: 30%;">
 									<table class="col-lg-12">
 										<tr>
 											<td id="buildingNo"><?=$projectInfo['BuildingNumber']?></td>
-											<td><label> בניין </label></td>
+											<td class="forLabel"><label> בניין </label></td>
 										</tr>
 										<tr>
 											<td id="entranceNumber"><?=$projectInfo['EntranceNumber']?></td>
-											<td><label> כניסה </label></td>
+											<td class="forLabel"><label> כניסה </label></td>
 										</tr>
 									</table>
 								</td>
@@ -193,16 +212,16 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 								<table class="col-xs-12">
 									<tr>
 										<td><?=$projectInfo['ProjectName']?></td>
-										<td><label> שם </label></td>
+										<td class="forLabel"><label> שם </label></td>
 										<td> פרויקט </td>
 									</tr>
 									<tr>
 										<td colspan="2"><?=$projectInfo['ProjectType']?></td>
-										<td><label> סוג </label></td>
+										<td class="forLabel"><label> סוג </label></td>
 									</tr>
 									<tr>
 										<td colspan="2"><?=$projectInfo['City']?></td>
-										<td><label> יישוב </label></td>
+										<td class="forLabel"><label> יישוב </label></td>
 									</tr>
 								</table>
 							</td>
@@ -210,16 +229,16 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 								<table class="col-xs-12">
 									<tr>
 										<td colspan="2"><?=$projectInfo['BuildingNumber']?></td>
-										<td><label> בניין </label></td>
+										<td class="forLabel"><label> בניין </label></td>
 									</tr>
 									<tr>
 										<td colspan="2"><?=$projectInfo['EntranceNumber']?></td>
-										<td><label> כניסה </label></td>
+										<td class="forLabel"><label> כניסה </label></td>
 									</tr>
 									<tr>
 										<td><?=$documentMonth?></td>
 										<td><?=$documentYear?></td>
-										<td><label> תאריך תיעוד </label></td>
+										<td class="forLabel"><label> תאריך תיעוד </label></td>
 									</tr>
 								</table>
 							</td>
