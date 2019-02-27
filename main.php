@@ -154,6 +154,14 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 	.forLabel{
 		background-color: #ccc;
 	}
+	.forDocumentMonth{
+		padding-left: 10px;
+		color: #ccc;
+		font-size: 1.3em;
+	}
+	#documentYear{
+		/*border-left: 1px solid;*/
+	}
 </style>
 <div id="project-content">
     <div id="sub-header">
@@ -183,7 +191,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 										<tr>
 											<td colspan="2" id="photography"><?=$projectInfo['Photography']?></td>
 											<td class="forLabel"><label> צילום </label></td>
-											<td id="documentMonth"><?=$documentMonth?></td>
+											<td id="documentMonth"><?=$documentMonth?><span class="forDocumentMonth">|</span></td>
 											<td id="documentYear"><?=$documentYear?></td>
 											<td class="forLabel"><label> תאריך תיעוד </label></td>
 										</tr>
@@ -236,8 +244,8 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 										<td class="forLabel"><label> כניסה </label></td>
 									</tr>
 									<tr>
-										<td><?=$documentMonth?></td>
-										<td><?=$documentYear?></td>
+										<td><?=$documentMonth?><span class="forDocumentMonth">|</span></td>
+										<td id="documentYear"><?=$documentYear?></td>
 										<td class="forLabel"><label> תאריך תיעוד </label></td>
 									</tr>
 								</table>
@@ -1085,6 +1093,32 @@ function SaveImage(){
 			});
 		}
 	}
+	var nTop = $("#wraperr").offset().top;
+	console.log(nTop);
+	function setNavTop() {
+		$('#wraperr').css('position','');
+		var nScrollTop = $("#project-container").scrollTop();
+		console.log("setNavTop nTop : ", nTop , "  nScrollTop : ", nScrollTop);
+		var nRealTop = Math.max(0, nTop - nScrollTop);
+		$('#wraperr').css('position','absolute');
+		$('#wraperr').css('z-index', 1000);
+		$('#wraperr').css('top', nRealTop);
+		$("#wraperr").css('width',$("#wraperr").parent().width());
+	}
+	$("#project-container").scroll(function(){
+		setNavTop();
+	});
+	$(window).scroll(function(){
+		console.log("scrolled.");
+		$('#wraperr').css('position','');
+		var nScrollTop = $(document).scrollTop();
+		console.log("touchmove nTop : ", nTop , "  nScrollTop : ", nScrollTop);
+		var nRealTop = Math.max(nScrollTop, nTop);
+		$('#wraperr').css('position','absolute');
+		$('#wraperr').css('z-index', 1000);
+		$('#wraperr').css('top', nRealTop);
+		$("#wraperr").css('width',$("#wraperr").parent().width());
+	});
 </script>
 </html>
 
