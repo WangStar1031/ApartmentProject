@@ -36,6 +36,13 @@
 		}
 		echo "OK";
 	}
+	function getArrNotes($_projectPath, $_apartNo){
+		$projectInfo = getProjectInfo($_projectPath);
+		if( $projectInfo == false){
+			return [];
+		}
+		return getAllNotes($projectInfo[0]['Id'], $_apartNo);
+	}
 	function getProjectInfo( $_projectPath){
 		global $db;
 		$sql = "SELECT * FROM projectinfo WHERE ProjectPath='$_projectPath'";
@@ -252,7 +259,7 @@
 	}
 	function getAllNotes($_projectId, $_aptNo){
 		global $db;
-		$sql = "SELECT * FROM note WHERE ProjectId='$_projectId' AND ApartmentNumber='$_aptNo'";
+		$sql = "SELECT * FROM note WHERE ProjectId='$_projectId' AND ApartmentNumber='$_aptNo' AND Notes <> ''";
 		$result = $db->select($sql);
 		if( $result == false)return [];
 		return $result;

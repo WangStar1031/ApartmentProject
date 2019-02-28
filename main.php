@@ -116,7 +116,19 @@ $documentMonth = date("m", strtotime($documentDate));
 $documentYear = date("Y", strtotime($documentDate));
 $parts4Project = getParts($projectInfo['Id']);
 $apartmentInfo = getApratmentInfo($projectInfo['Id']);
-$curApartment = $apartmentInfo[$apartNo - 1];
+// print_r($apartmentInfo);
+$_apartIndex = 0;
+foreach ($apartmentInfo as $value) {
+	$_apartIndex++;
+	if( $value['ApartmentName'] == "ap" . $apartNo){
+		$curApartment = $value;// $apartmentInfo[$apartNo - 1];
+		break;;
+	}
+}
+// echo "<br>";
+// print_r($curApartment);
+$_dirID = $curApartment['ApartmentName'];
+// print_r($_dirID);
 $arrPartInfos = explode(",", $curApartment['PartInfos']);
 $sectionCount = $curApartment['SectionCount'];
 $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
@@ -172,7 +184,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 						<table style="width: 100%;">
 							<tr>
 								<td style="width: 70%;">
-									<table class="col-lg-12">
+									<table style="width: 100%;">
 										<tr>
 											<td colspan="2" id="projectType"><?=$projectInfo['ProjectType']?></td>
 											<td class="forLabel"><label>סוג  </label></td>
@@ -198,7 +210,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 									</table>
 								</td>
 								<td style="width: 30%;">
-									<table class="col-lg-12">
+									<table style="width: 100%;">
 										<tr>
 											<td id="buildingNo"><?=$projectInfo['BuildingNumber']?></td>
 											<td class="forLabel"><label> בניין </label></td>
@@ -214,10 +226,10 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
         			</div>
         		</div>
         		<div class="col-xs-12" id="mobileHeader" style="display: none;">
-					<table class="col-xs-12">
+					<table style="width:100%;">
 						<tr>
 							<td>
-								<table class="col-xs-12">
+								<table style="width:100%;">
 									<tr>
 										<td><?=$projectInfo['ProjectName']?></td>
 										<td class="forLabel"><label> שם </label></td>
@@ -234,7 +246,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 								</table>
 							</td>
 							<td>
-								<table class="col-xs-12">
+								<table style="width:100%;">
 									<tr>
 										<td colspan="2"><?=$projectInfo['BuildingNumber']?></td>
 										<td class="forLabel"><label> בניין </label></td>
@@ -326,17 +338,19 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 				    <ul class="clearfix" style="width: <?=260*$nApartCount?>px;">
 				    	<?php
 				    	for($i = 1; $i <= $nApartCount; $i++){
-					    	$href = $path . "main.php?apartNo=" . $i;
+							$_curApartment = $apartmentInfo[$i - 1];
+							$_apartName = $_curApartment['ApartmentName'];
+							$_apartNo = str_replace("ap", "", $_apartName);
+					    	$href = $path . "main.php?apartNo=" . $_apartNo;
 			    		?>
-					    <li class="<?php if($apartNo == $i) echo "active";?>">
-                            <div class="horiz-top" title="Apartment"><a href="<?=$href?>"><span class="doc-number"><?=$i?></span><span class="doc">דירה</span></a></div>
+					    <li class="<?php if($apartNo == $_apartNo) echo "active";?>">
+                            <div class="horiz-top" title="Apartment"><a href="<?=$href?>"><span class="doc-number"><?=$_apartNo?></span><span class="doc">דירה</span></a></div>
 							<div class="horiz-bottom">
 								<?php
-								$curApartment = $apartmentInfo[$i - 1];
 								$width = 100 / count($parts4Project);
 								for( $j = 0; $j < count($parts4Project); $j++){
 									$val = $parts4Project[$j]['PartName'];
-									$arrPartInfos = explode(",", $curApartment['PartInfos']);
+									$arrPartInfos = explode(",", $_curApartment['PartInfos']);
 									$imgNumber = 0;
 									if( count($arrPartInfos) > $j){
 										$imgNumber = $arrPartInfos[$j];
@@ -377,7 +391,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 		            				<div class="row">
 			            				<div style="background-color: #e68e52;">Notes</div>
 			            				<div class="col-md-12 col-mxs12" style="background-color: #ecb38b; height: 1000px;">
-			            					<div class="row">
+			            					<div class="row" id="arrNotes">
 				            					<?php
 				            					$arrNotes = getAllNotes($projectInfo['Id'], $apartNo);
 				            					foreach ($arrNotes as $value) {
@@ -394,32 +408,36 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 		            			<div class="col-md-4 col-xs-4">
 		            				<div class="row">
 			            				<div style="background-color: #61d668;">Reparations</div>
-			            				<div style="background-color: #99ef9e; height: 1000px;">
-			            					<?php
-			            					$arrReparation = getAllReparations( $projectInfo['Id'], $apartNo);
-			            					foreach ($arrReparation as $value) {
-			            						$idx = $value['PhotoIdx'];
-		            						?>
-		            						<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
-		            						<?php
-			            					}
-			            					?>
+			            				<div class="col-md-12 col-mxs12" style="background-color: #99ef9e; height: 1000px;">
+			            					<div class="row" id="arrReparation">
+												<?php
+												$arrReparation = getAllReparations( $projectInfo['Id'], $apartNo);
+												foreach ($arrReparation as $value) {
+													$idx = $value['PhotoIdx'];
+												?>
+												<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
+												<?php
+												}
+												?>
+											</div>
 			            				</div>
 		            				</div>
 		            			</div>
 		            			<div class="col-md-4 col-xs-4">
 		            				<div class="row">
 			            				<div style="background-color: #d45555;">Defects</div>
-			            				<div style="background-color: #e88d8d; height: 1000px;">
-			            					<?php
-			            					$arrDefects = getAllDefects( $projectInfo['Id'], $apartNo);
-			            					foreach ($arrDefects as $value) {
-			            						$idx = $value['PhotoIdx'];
-		            						?>
-		            						<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
-		            						<?php
-			            					}
-			            					?>
+			            				<div class="col-md-12 col-mxs12" style="background-color: #e88d8d; height: 1000px;">
+			            					<div class="row" id="arrDefects">
+												<?php
+												$arrDefects = getAllDefects( $projectInfo['Id'], $apartNo);
+												foreach ($arrDefects as $value) {
+													$idx = $value['PhotoIdx'];
+												?>
+												<a class="fright photoBtn btn" href="#No<?=$idx?>"><?=$idx?></a>
+												<?php
+												}
+												?>
+											</div>
 			            				</div>
 		            				</div>
 		            			</div>
@@ -428,7 +446,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 			            <!-- <div class="clear rec-title">קישור מהיר</div> -->
 <?php
 $files = [];
-$dir = __DIR__ . "/container/project1/ap" . $apartNo . "/project/plans/";
+$dir = __DIR__ . "/container/project1/" . $_dirID . "/project/plans/";
 if( file_exists($dir)){
 	$files = scandir($dir);
 }
@@ -439,7 +457,7 @@ foreach($files as $file){
 		continue;
 	$i++;
 ?>
-<div class="rec-number"><a class="plan-popup" href="#No<?=$i?>"><?=$i?><span><img src="container/project1/ap<?=$apartNo?>/project/plans/<?=$i?>pl.jpg" /></span></a></div>
+<div class="rec-number"><a class="plan-popup" href="#No<?=$i?>"><?=$i?><span><img src="container/project1/<?=$_dirID?>/project/plans/<?=$i?>pl.jpg" /></span></a></div>
 <?php
 }
 
@@ -533,10 +551,10 @@ foreach($files as $file){
 	<div id="photoplan">
 		<div id="plan" onClick="MM_effectAppearFade('photo<?=$i?>', 500, 100, 0, true)">
 			<div id="hideonload">
-				<img class="desktop" src="container/project1/ap<?=$apartNo?>/project/plans/<?=$i?>pl.jpg">
+				<img class="desktop" src="container/project1/<?=$_dirID?>/project/plans/<?=$i?>pl.jpg">
 			</div>
 			<div class="photo" id="photo<?=$i?>">
-				<img class="desktop" src="container/project1/ap<?=$apartNo?>/project/photos/<?=$i?>pi.jpg" title="click to switch between photo and plan">
+				<img class="desktop" src="container/project1/<?=$_dirID?>/project/photos/<?=$i?>pi.jpg" title="click to switch between photo and plan">
 			</div>
 		</div>
 		<div class="textBox">
@@ -558,12 +576,12 @@ foreach($files as $file){
 				</a>
 			</div>
 			<div class="fright upload-over-button" title="download">
-				<a href="container/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" download >
+				<a href="container/<?=$_dirID?>/project/big/<?=$i?>pi.jpg" download >
 					<span><i class="fas fa-download"></i></span>
 				</a>
 			</div>
 			<div class="fright upload-over-button" title="zoom">
-				<a href="container/project1/ap<?=$apartNo?>/project/big/<?=$i?>pi.jpg" target="_blank">
+				<a href="container/project1/<?=$_dirID?>/project/big/<?=$i?>pi.jpg" target="_blank">
 					<span><i class="fas fa-search-plus"></i></span>
 				</a>
 			</div>
@@ -594,12 +612,12 @@ foreach($files as $file){
 <?php
 }
 ?>
-<div class="uploadImgWnd" style="display: none;">
+<div class="uploadImgWnd" style="display: none; max-height: 95%; overflow: auto;">
 	<!-- <div class="row">
 	</div> -->
 	<div class="imgBorder">
 		<div class="xBtn" onclick="closeUploadImgWnd()">X</div>
-		<img src="container/project1/ap<?=$apartNo?>/project/photos/1pi.jpg">
+		<img src="container/project1/<?=$_dirID?>/project/photos/1pi.jpg">
 		<div class="uploadedImgPan" style="position: absolute; top:10px;">
 		</div>
 		<div id="uploadedContainer" style="position: absolute; top: 10px">
@@ -611,8 +629,9 @@ foreach($files as $file){
 			<input type="file" id="img_picker" style="display: none;">
 			<br><br>
 			<label for="img_picker">Upload Photo</label>
+			<div onclick="SaveImage()" class="forMobile popupBtn btn">Save</div>
 		</div>
-		<div class="infFields col-md-12" style="text-align: right;">
+		<div class="infFields col-md-12 forDesktop" style="text-align: right;">
 			<div class="row">
 				<div class="col-md-5">
 					<label> תאריך צילום :</label><!-- Shooting Date -->
@@ -636,7 +655,7 @@ foreach($files as $file){
 						<option> מפקח </option><!-- Contractor -->
 						<option> דייר </option><!-- Tenant -->
 					</select>
-					<button onclick="SaveImage()">Save</button>
+					<div onclick="SaveImage()" class="popupBtn btn">Save</div>
 				</div>
 				<div class="col-md-7">
 					<table>
@@ -693,9 +712,9 @@ foreach($files as $file){
 							<td>
 								<table>
 									<tr>
-										<td id="btnTypeGroup">
-											<button onclick="onReparation(this)"> תיקונים </button><!-- Reparation -->
-											<button onclick="onDefect(this)" class="btn-success"> תקלות </button> <!-- Defect -->
+										<td id="btnTypeGroup row">
+											<div class="btn " onclick="onReparation(this)"> תיקונים </div><!-- Reparation -->
+											<div class="btn popupBtn" onclick="onDefect(this)"> תקלות </div> <!-- Defect -->
 										</td>
 									</tr>
 									<tr>
@@ -728,7 +747,89 @@ foreach($files as $file){
 					</table>
 				</div>
 			</div>
-			<!-- <button onclick="popupGallery()">Open Image Gallery</button> -->
+		</div>
+		<div class="infFields col-md-12 forMobile" style="text-align: right;">
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="btnTypeGroup">
+						<div class="btn" onclick="onReparation(this)"> תיקונים </div><!-- Reparation -->
+						<div class="btn popupBtn" onclick="onDefect(this)" class="btn-success"> תקלות </div> <!-- Defect -->
+					</div>
+					<label> תאריך צילום :</label><!-- Shooting Date -->
+					<table>
+						<tr>
+							<td style="padding: 5px 10px;"><input type="text" name="Day" placeholder="Day"></td>
+							<td style="padding: 5px 10px;"><input type="text" name="Month" placeholder="Month"></td>
+							<td style="padding: 5px 10px;"><input type="text" name="Year" placeholder="Year"></td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td id="desc"> פגם </td> <!-- Defect -->
+						</tr>
+						<tr>
+							<td>
+								<input type="text" name="desc">
+							</td>
+						</tr>
+						<tr>
+							<td> תיאור </td><!-- Description -->
+						</tr>
+						<tr>
+							<td>
+								<textarea name="description"></textarea>
+							</td>
+						</tr>
+					</table>
+
+					<label> תקופה :</label><!-- Shooting Time -->
+					<select id="ShootingTime">
+						<option> במהלך הבנייה </option><!-- During Construction Works -->
+						<option> במהלך המסירה </option><!-- During the handover -->
+						<option> בתקופת האחריות </option><!-- After the handover in guarantee -->
+						<option> מחוץ תקופת האחריות </option><!-- After guarantee -->
+					</select>
+					<label> המתלונן </label><!-- Shooting Person -->
+					<select id="ShootingPerson">
+						<option> נציג החברה </option><!-- Representative -->
+						<option> מפקח </option><!-- Contractor -->
+						<option> דייר </option><!-- Tenant -->
+					</select>
+					<label> תדירות </label><!-- Frequency -->
+					<select id="frequency">
+						<option class="forDefects"> תקלה ראשונה </option><!-- First Defect -->
+						<option class="forDefects"> תקלה חוזרת </option><!-- Repeating Defect -->
+
+						<option class="forReparations"> עזרה ראשונה </option><!-- First Aid -->
+						<option class="forReparations"> תיקון רגיל </option><!-- Normal Repair -->
+						<option class="forReparations"> תיקון נוסף </option><!-- Additional Repair -->
+					</select>
+					<label> מקור </label><!-- Origin -->
+					<select id="origin">
+						<option class="forDefects"> פגמים עבודה </option><!-- Works Defect -->
+						<option class="forDefects"> פגמים בחומר </option><!-- Material Defect -->
+						<option class="forDefects"> תקלה במכשיר </option><!-- Device Malfunction -->
+
+						<option class="forReparations"> תיקון פגם עבודה </option><!-- Works Defect -->
+						<option class="forReparations"> תיקון פגם בחומר </option><!-- Material Defect -->
+						<option class="forReparations"> החלפת מכשיר </option><!-- Item Replacement -->
+					</select>
+					<label> חירום </label><!-- Level -->
+					<select id="level">
+						<option> דחוף </option><!-- Urgent -->
+						<option> לא דחוף </option><!-- Not urgent -->
+					</select>
+					<label> המבנה </label>
+					<select id="structure">
+						<option> מבני </option><!-- Structural Defect -->
+						<option> לא מבני </option><!-- Non-Structural Defect -->
+					</select>
+					<label> קבלן </label><!-- Contractor -->
+					<input type="text" name="contractor">
+					<label> עובד </label><!-- Worker -->
+					<input type="text" name="worker">
+				</div>
+			</div>
 		</div>
 		<div style="clear: both;"></div>
 	</div>
@@ -772,6 +873,14 @@ foreach($files as $file){
 		background-color: black;
 		margin: 0px !important;
 	}
+	.popupBtn{
+		background-color: #333;
+		color: #ccc;
+	}
+	.popupBtn:hover{
+		background-color: #444 !important;
+		color: #ddd;
+	}
 </style>
 
 <script>
@@ -780,7 +889,12 @@ var prevId = -1, prevCat = "";
 var uploadedInfos = [];
 var fullWidth = document.body.clientWidth;
 var aptCount = "<?=$nApartCount?>";
-$("#centered").scrollLeft($("#centered ul li").eq("<?=$apartNo - 1?>").position().left);
+$("#centered").scrollLeft($("#centered ul li").eq("<?=$_apartIndex - 1?>").position().left);
+if( fullWidth < 769){
+	$(".forDesktop").remove();
+} else{
+	$(".forMobile").remove();
+}
 </script> 
 <script type="text/javascript" src="assets/js/main/main.js?<?=time()?>"></script>
 </html>

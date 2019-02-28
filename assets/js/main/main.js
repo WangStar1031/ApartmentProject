@@ -193,7 +193,24 @@ function showImage(src, target){
 var src = document.getElementById("img_picker");
 var target = document.getElementById("img_drawer");
 showImage(src, target);
+function updateArrNotes(){
+	$(".textBox").hide();
+	$.post("api_process.php", {action: "getArrNotes", projectPath: "project1", apartNo: apartNo}, function(response){
+		console.log(response);
+		var arrNotes = JSON.parse(response);
+		var strHtml = "";
+		for( var i = 0; i < arrNotes.length; i++){
+			var curNote = arrNotes[i];
+			strHtml += '<a class="fright photoBtn btn" href="#No' + curNote.PhotoIdx + '">' + curNote.PhotoIdx + '</a>';
+		}
+		$("#arrNotes").html(strHtml);
+	});
+}
+function updateArrDefect_Reparation(){
+	$.post("api_process.php", {action: "getArrImages", projectPath: "project1"}, function(response){
 
+	})
+}
 function SaveImage(){
 	// var strFileType = /[^.]+$/.exec(src.files[0].name).pop();
 	var fileName = src.files[0].name;
@@ -251,6 +268,7 @@ function SaveImage(){
 		$.post("api_process.php", {action: "updateNotes", projectName: "project1", apartNo: apartNo, photoNumber: photoNumber, strNotes: strNotes}, function(data){
 			if( data == "OK"){
 				alert("Saved.");
+				updateArrNotes();
 			}
 		});
 	}
@@ -271,8 +289,8 @@ function SaveImage(){
 		$(_this).parent().parent().hide();
 	}
 	function onReparation(_this){
-		$(_this).parent().find("button").removeClass("btn-success");
-		$(_this).addClass("btn-success");
+		$(_this).parent().find("div").removeClass("popupBtn");
+		$(_this).addClass("popupBtn");
 		$(".forDefects").hide();
 		$(".forReparations").show();
 		var sels = $(".forReparations").parent();
@@ -282,8 +300,8 @@ function SaveImage(){
 		$("#desc").html("תיקון");//Reparation
 	}
 	function onDefect(_this){
-		$(_this).parent().find("button").removeClass("btn-success");
-		$(_this).addClass("btn-success");
+		$(_this).parent().find("div").removeClass("popupBtn");
+		$(_this).addClass("popupBtn");
 		$(".forReparations").hide();
 		$(".forDefects").show();
 		var sels = $(".forDefects").parent();
