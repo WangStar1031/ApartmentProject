@@ -36,6 +36,20 @@
 		}
 		echo "OK";
 	}
+	function getArrDefects($_projectPath, $_apartNo){
+		$projectInfo = getProjectInfo($_projectPath);
+		if( $projectInfo == false){
+			return [];
+		}
+		return getAllDefects($projectInfo[0]['Id'], $_apartNo);
+	}
+	function getArrReparation($_projectPath, $_apartNo){
+		$projectInfo = getProjectInfo($_projectPath);
+		if( $projectInfo == false){
+			return [];
+		}
+		return getAllReparations($projectInfo[0]['Id'], $_apartNo);
+	}
 	function getArrNotes($_projectPath, $_apartNo){
 		$projectInfo = getProjectInfo($_projectPath);
 		if( $projectInfo == false){

@@ -712,7 +712,7 @@ foreach($files as $file){
 							<td>
 								<table>
 									<tr>
-										<td id="btnTypeGroup row">
+										<td id="btnTypeGroup" class="row">
 											<div class="btn " onclick="onReparation(this)"> תיקונים </div><!-- Reparation -->
 											<div class="btn popupBtn" onclick="onDefect(this)"> תקלות </div> <!-- Defect -->
 										</td>

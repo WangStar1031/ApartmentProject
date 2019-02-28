@@ -196,7 +196,7 @@ showImage(src, target);
 function updateArrNotes(){
 	$(".textBox").hide();
 	$.post("api_process.php", {action: "getArrNotes", projectPath: "project1", apartNo: apartNo}, function(response){
-		console.log(response);
+		// console.log(response);
 		var arrNotes = JSON.parse(response);
 		var strHtml = "";
 		for( var i = 0; i < arrNotes.length; i++){
@@ -207,9 +207,26 @@ function updateArrNotes(){
 	});
 }
 function updateArrDefect_Reparation(){
-	$.post("api_process.php", {action: "getArrImages", projectPath: "project1"}, function(response){
-
-	})
+	$.post("api_process.php", {action: "getArrDefects", projectPath: "project1", apartNo: apartNo}, function(response){
+		// console.log(response);
+		var arrNodes = JSON.parse(response);
+		var strHtml = "";
+		for( var i = 0; i < arrNodes.length; i++){
+			var curNode = arrNodes[i];
+			strHtml += '<a class="fright photoBtn btn" href="#No' + curNode.PhotoIdx + '">' + curNode.PhotoIdx + '</a>';
+		}
+		$("#arrDefects").html(strHtml);
+	});
+	$.post("api_process.php", {action: "getArrReparation", projectPath: "project1", apartNo: apartNo}, function(response){
+		// console.log(response);
+		var arrNodes = JSON.parse(response);
+		var strHtml = "";
+		for( var i = 0; i < arrNodes.length; i++){
+			var curNode = arrNodes[i];
+			strHtml += '<a class="fright photoBtn btn" href="#No' + curNode.PhotoIdx + '">' + curNode.PhotoIdx + '</a>';
+		}
+		$("#arrReparation").html(strHtml);
+	});
 }
 function SaveImage(){
 	// var strFileType = /[^.]+$/.exec(src.files[0].name).pop();
@@ -237,7 +254,9 @@ function SaveImage(){
 	var Origin = $("#origin").val();
 	var Structure = $("#structure").val();
 	var Level = $("#level").val();
-	var Type = $("#btnTypeGroup .btn-success").eq(0).text();
+	var Type = "Defect";
+	if( $("#btnTypeGroup div").eq(0).hasClass("popupBtn"))
+		Type = "Reparation";
 	var Desc = $("input[name=desc]").val();
 	var Description = $("textarea[name=description]").val();
 	var Worker = $("input[name=worker]").val();
@@ -250,6 +269,7 @@ function SaveImage(){
 		var response = JSON.parse(data);
 		if( response.message == "OK"){
 			uploadedPhotoDraw();
+			updateArrDefect_Reparation();
 		}
 	})
 }

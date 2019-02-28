@@ -4,6 +4,24 @@ $_action = "";
 if( isset($_GET['action'])) $_action = $_GET['action'];
 if( isset($_POST['action'])) $_action = $_POST['action'];
 switch ($_action) {
+	case 'getArrDefects':
+		$_projectPath = '';
+		if( isset($_GET['projectPath'])) $_projectPath = $_GET['projectPath'];
+		if( isset($_POST['projectPath'])) $_projectPath = $_POST['projectPath'];
+		$_apartNo = '';
+		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
+		if( isset($_POST['apartNo'])) $_apartNo = $_POST['apartNo'];
+		echo json_encode(getArrDefects($_projectPath, $_apartNo));
+		break;
+	case 'getArrReparation':
+		$_projectPath = '';
+		if( isset($_GET['projectPath'])) $_projectPath = $_GET['projectPath'];
+		if( isset($_POST['projectPath'])) $_projectPath = $_POST['projectPath'];
+		$_apartNo = '';
+		if( isset($_GET['apartNo'])) $_apartNo = $_GET['apartNo'];
+		if( isset($_POST['apartNo'])) $_apartNo = $_POST['apartNo'];
+		echo json_encode(getArrReparation($_projectPath, $_apartNo));
+		break;
 	case 'getArrNotes':
 		$_projectPath = '';
 		if( isset($_GET['projectPath'])) $_projectPath = $_GET['projectPath'];
