@@ -99,7 +99,7 @@ if( $_SESSION['reparationUserName'] == ""){
 </head>
 <body>
 <?php
-$apartNo = 1;
+$apartNo = 0;
 require_once __DIR__ . "/libInformation.php";
 if( isset($_GET['apartNo'])){
 	$apartNo = $_GET['apartNo'];
@@ -117,6 +117,9 @@ $documentYear = date("Y", strtotime($documentDate));
 $parts4Project = getParts($projectInfo['Id']);
 $apartmentInfo = getApratmentInfo($projectInfo['Id']);
 // print_r($apartmentInfo);
+if( $apartNo == 0){
+	$apartNo = str_replace("ap", "", $apartmentInfo[0]['ApartmentName']);
+}
 $_apartIndex = 0;
 foreach ($apartmentInfo as $value) {
 	$_apartIndex++;
