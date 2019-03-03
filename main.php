@@ -500,7 +500,7 @@ foreach($files as $file){
 	            </div>
 			</div>
 			<div class="fright popup-content-plan">
-	               <img src="assets/images/sectiuni-ap1.jpg">  
+	               <img src="assets/images/sectiuni-ap<?=$apartNo?>.jpg">  
 			</div>	
 			<div class="clear"></div>
 	    </div>
