@@ -109,7 +109,7 @@ function uploadedPhotoDraw(){
 			var lastImgPath = arrNodes[ ptCount - 1].fileSUrl;
 
 			strHtml += '<div class="groupContainer" style="top:' + top + 'px;left:' + left + 'px; position: absolute;" groupId="' + curInfo.groupId + '">';
-				strHtml += '<img src="' + lastImgPath + '" style="width:' + width + 'px; height: ' + height + 'px;">';
+				strHtml += '<img src="' + lastImgPath + '" style="width:' + width + 'px;">';
 				strHtml += '<div class="photoCount" onclick="countClicked(' + i + ')">' + ptCount + '</div>';
 			strHtml += '</div>';
 			
