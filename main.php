@@ -192,8 +192,8 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 											<td colspan="2" id="projectType"><?=$projectInfo['ProjectType']?></td>
 											<td class="forLabel"><label>סוג  </label></td>
 											<td id="projectName"><?=$projectInfo['ProjectName']?></td>
-											<td class="forLabel"><label> שם </label></td>
-											<td> פרויקט </td>
+											<td colspan="2" class="forLabel"><label> פרויקט </label></td>
+											<!-- <td> פרויקט </td> -->	<!-- Project -->
 										</tr>
 										<tr>
 											<td id="addressNo"><?=$projectInfo['No']?></td>
@@ -235,15 +235,15 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 								<table style="width:100%;">
 									<tr>
 										<td><?=$projectInfo['ProjectName']?></td>
-										<td class="forLabel"><label> שם </label></td>
-										<td> פרויקט </td>
+										<td class="forLabel"><label> פרויקט </label></td>
+										<!-- <td> פרויקט </td> -->
 									</tr>
 									<tr>
-										<td colspan="2"><?=$projectInfo['ProjectType']?></td>
+										<td><?=$projectInfo['ProjectType']?></td>
 										<td class="forLabel"><label> סוג </label></td>
 									</tr>
 									<tr>
-										<td colspan="2"><?=$projectInfo['City']?></td>
+										<td><?=$projectInfo['City']?></td>
 										<td class="forLabel"><label> יישוב </label></td>
 									</tr>
 								</table>
@@ -392,7 +392,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 		            		<div class="row" style="color: black;">
 		            			<div class="col-md-4 col-xs-4">
 		            				<div class="row">
-			            				<div style="background-color: #e68e52;">Notes</div>
+			            				<div style="background-color: #e68e52;"> הערות </div><!-- Notes -->
 			            				<div class="col-md-12 col-mxs12" style="background-color: #ecb38b; height: 1000px;">
 			            					<div class="row" id="arrNotes">
 				            					<?php
@@ -410,7 +410,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 		            			</div>
 		            			<div class="col-md-4 col-xs-4">
 		            				<div class="row">
-			            				<div style="background-color: #61d668;">Reparations</div>
+		            					<div style="background-color: #61d668;"> תיקונים </div><!-- Reparations -->
 			            				<div class="col-md-12 col-mxs12" style="background-color: #99ef9e; height: 1000px;">
 			            					<div class="row" id="arrReparation">
 												<?php
@@ -428,7 +428,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 		            			</div>
 		            			<div class="col-md-4 col-xs-4">
 		            				<div class="row">
-			            				<div style="background-color: #d45555;">Defects</div>
+			            				<div style="background-color: #d45555;"> תקלות </div><!-- Defects -->
 			            				<div class="col-md-12 col-mxs12" style="background-color: #e88d8d; height: 1000px;">
 			            					<div class="row" id="arrDefects">
 												<?php
@@ -563,8 +563,9 @@ foreach($files as $file){
 		<div class="textBox">
 			<div>
 				<div style="float: left;" onclick="closeNote(this)">&#10006;</div>
-				<div style="float: right;">Notes</div>
+				<div style="float: right;"> Notes</div>
 				<div style="clear: both;"></div>
+
 			</div>
 			<textarea id="text<?=$i?>" rows="3"></textarea><br>
 			<button class="btn-success" style="float: right; margin-top: 10px;" onclick="onNoteSave(this)">Save</button>
@@ -864,7 +865,6 @@ foreach($files as $file){
 			<div class="modal-body">
 			</div>
 		</div>
-
 	</div>
 </div>
 <style type="text/css">
@@ -883,6 +883,22 @@ foreach($files as $file){
 	.popupBtn:hover{
 		background-color: #444 !important;
 		color: #ddd;
+	}
+	.horiz-bottom .horiz-bottoms a{
+		position: relative;
+		top: -7px;
+	}
+	@media only screen and (max-width: 768px) {
+		.horiz-bottom .horiz-bottoms a{
+			position: relative;
+			top: 0px;
+		}
+	}
+	#reception-notes a{
+		padding: 10px!important;
+		height: 2em!important;
+		line-height: 1em!important;
+		width: 2em!important;
 	}
 </style>
 
