@@ -112,7 +112,6 @@ function uploadedPhotoDraw(){
 				strHtml += '<img src="' + lastImgPath + '" style="width:' + width + 'px;">';
 				strHtml += '<div class="photoCount" onclick="countClicked(' + i + ')">' + ptCount + '</div>';
 			strHtml += '</div>';
-			
 		}
 		$(".imgBorder").append(strHtml);
 		$(".groupContainer").droppable({
@@ -130,6 +129,7 @@ function uploadedPhotoDraw(){
 	});
 }
 function popup(_id, _cat){
+	// debugger;
 	var imgPath = "";
 	if( _cat == "photo"){
 		imgPath = "container/project1/ap" + apartNo + "/project/photos/" + _id + "pi.jpg";
@@ -137,6 +137,18 @@ function popup(_id, _cat){
 		imgPath = "container/project1/ap" + apartNo + "/project/plans/" + _id + "pl.jpg";
 	}
 	$(".imgBorder img").eq(0).attr("src",imgPath);
+	if( fullWidth < 769){
+		// $(window).scrollTop(0);
+		// $(".forDesktop").remove();
+	} else{
+		// $("#project-container").scrollTop(0);
+		// $(".forMobile").remove();
+	}
+
+	// $("#project-container").scroll(function(){
+	// 	setNavTop();
+	// });
+	// $(window).scroll(function(){
 	if( $(".uploadImgWnd").is(":visible")){
 		if( prevId == _id && prevCat == _cat){
 			$(".uploadImgWnd").hide();
@@ -153,9 +165,7 @@ function droppedUi(event, ui){
 	console.log(ui);
 	var target = event.target;
 	var groupId = target.getAttribute("groupid");
-	// console.log( target.getAttribute("groupid"));
-	var curEle = event.toElement;
-	curEle.setAttribute("groupId", groupId);
+	$(".uploadedImg").attr("groupId", groupId);
 }
 function outUi(event, ui){
 	console.log(ui);
@@ -174,7 +184,7 @@ function showImage(src, target){
 			// 	// strHtml += '<img onclick="imgSearchClicked(this)" src="assets/images/search.png">';
 			// 	strHtml += '<div style="clear:both;"></div>';
 			// strHtml += '</div>';
-			strHtml += '<img class="uploadedImg" style="width:74px; height:auto;" src="' + this.result + '">';
+			strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + this.result + '">';
 		$(".uploadedImgPan").html(strHtml);
 		$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 		$(".uploadedImgPan").draggable(); 
@@ -263,13 +273,14 @@ function SaveImage(){
 	var Contractor = $("input[name=contractor]").val();
 
 	var infos = {ShootingDate: ShootingDate, ShootingTime: ShootingTime, ShootingPerson: ShootingPerson, Frequency: Frequency, Origin: Origin, Structure: Structure, Level: Level, Desc: Desc, Description: Description, Worker: Worker, Contractor: Contractor};
-	
+	$("#loadingImg").show();
 	$.post("api_process.php", {action: "imgUpload", projectName: "project1", apartNo: apartNo, idxPhoto: prevId, catPhoto: prevCat, idxGroup: idxGroup, Type: Type, strFileType: strFileType, imgSrc: srcImg, posRect: JSON.stringify(posRect), infos: JSON.stringify(infos)}, function(data){
 		console.log(data);
 		var response = JSON.parse(data);
 		if( response.message == "OK"){
 			uploadedPhotoDraw();
 			updateArrDefect_Reparation();
+			$("#loadingImg").hide();
 		}
 	})
 }
@@ -363,15 +374,32 @@ function SaveImage(){
 	$("#project-container").scroll(function(){
 		setNavTop();
 	});
-	$(window).scroll(function(){
-		$('#wraperr').css('position','');
+	var prevScrollTop = 0;
+	function setNavTop4Mobile(){
+		// $('#wraperr').css('position','');
 		var nScrollTop = $(document).scrollTop();
-		// console.log(nScrollTop);
-		var nRealTop = Math.max(nScrollTop, nTop);
-		if( nRealTop != nTop){
-			$('#wraperr').css('position','absolute');
+		// var nRealTop = Math.max(nScrollTop, nTop);
+		if( nScrollTop >= nTop){
+			$('#wraperr').css('position','fixed');
+			if( prevScrollTop < nScrollTop){
+				$('#wraperr').css('top', '20px');
+			} else{
+				$('#wraperr').css('top', '0px');
+			}
+		} else{
+			$('#wraperr').css('position','');
+			$('#wraperr').css('top', nTop);
 		}
+		prevScrollTop = nScrollTop;
 		$('#wraperr').css('z-index', 1000);
-		$('#wraperr').css('top', nRealTop);
+		// $('#wraperr').css('top', nRealTop);
 		$("#wraperr").css('width',$("#wraperr").parent().width());
+	}
+	$(window).scroll(function(e){
+		setNavTop4Mobile();
 	});
+	if( fullWidth < 769){
+		setInterval(function(){
+			// setNavTop4Mobile();
+		}, 100);
+	}

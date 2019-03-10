@@ -867,6 +867,9 @@ foreach($files as $file){
 		</div>
 	</div>
 </div>
+<div id="loadingImg" style="position: absolute;z-index: 20000;width: 100vw; height: 100vh;vertical-align: middle;text-align: center; background-color: #35353591; display: none;">
+	<img src="assets/images/loading.gif" style="top: 50%; left: 50%;  -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); position: absolute;">
+</div>
 <style type="text/css">
 	.mobile_logout{
 		width: 100%;
@@ -909,8 +912,35 @@ var uploadedInfos = [];
 var fullWidth = document.body.clientWidth;
 var aptCount = "<?=$nApartCount?>";
 $("#centered").scrollLeft($("#centered ul li").eq("<?=$_apartIndex - 1?>").position().left);
+function setHrefTags4Mobile(_arrContents){
+	for( var i = 0; i < _arrContents.length; i++){
+		var curNode = _arrContents.eq(i);
+		var nId = curNode.text();
+		if( nId == 1){
+			_arrContents.eq(i).attr("href", "#");
+		} else{
+			_arrContents.eq(i).attr("href", "#No" + ( nId - 1) );
+		}
+	}
+}
 if( fullWidth < 769){
 	$(".forDesktop").remove();
+	setHrefTags4Mobile($("#arrNotes a"));
+	setHrefTags4Mobile($("#arrReparation a"));
+	setHrefTags4Mobile($("#arrDefects a"));
+	var arrSectionAs = $(".popup-content-numere a");
+	// debugger;
+	for( var i = 0; i < arrSectionAs.length; i++){
+		var curA = arrSectionAs.eq(i);
+		var href = curA.attr("href");
+		var nNumber = href.replace("#No", "") * 1 - 1;
+		if( nNumber == 0){
+			curA.attr("href", "#");
+		} else{
+			curA.attr("href", "#No" + nNumber);
+		}
+	}
+	// setHrefTags4Mobile($(".popup-content-numere a"));
 } else{
 	$(".forMobile").remove();
 }
