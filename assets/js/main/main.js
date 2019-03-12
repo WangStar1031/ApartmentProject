@@ -354,6 +354,7 @@ function SaveImage(){
 				if( data == "OK"){
 					$("#imgId" + _idx).remove();
 					uploadedPhotoDraw();
+					updateArrDefect_Reparation();
 				}
 			});
 		}
