@@ -595,18 +595,18 @@ foreach($files as $file){
 				<!-- </a> -->
 			</div>
 			<div class="fright upload-over-button" title="">
-				<a href="#">
+				<div style="cursor: pointer;">
 					<span class="upload-over-button" title="photo over photo" onclick="popup(<?=$i?>, 'photo')">
 						<i class="far fa-clone"></i>
 					</span>
-				</a>
+				</div>
 			</div>
 			<div class="fright upload-over-button" title="">
-				<a href="#">
+				<div style="cursor: pointer;">
 					<span class="upload-over-button" title="photo over plan" onclick="popup(<?=$i?>, 'plan')">
 						<i class="fas fa-clone"></i>
 					</span>
-				</a>
+				</div>
 			</div>
 			<div class="clear"></div>
 		</div>

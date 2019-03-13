@@ -65,7 +65,7 @@
 	}
 	@media only screen and (max-width: 768px) {
 		.uploadImgWnd, .uploadedImgWnd{
-			width: 100%;
+			width: 96%;
 			z-index: 10000;
 		}
 	}

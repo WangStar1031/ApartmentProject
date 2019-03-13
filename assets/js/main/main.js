@@ -130,6 +130,7 @@ function uploadedPhotoDraw(){
 }
 function popup(_id, _cat){
 	// debugger;
+	// return;
 	var imgPath = "";
 	if( _cat == "photo"){
 		imgPath = "container/project1/ap" + apartNo + "/project/photos/" + _id + "pi.jpg";
@@ -400,7 +401,7 @@ function SaveImage(){
 		setNavTop4Mobile();
 	});
 	if( fullWidth < 769){
-		setInterval(function(){
+		// setInterval(function(){
 			// setNavTop4Mobile();
-		}, 100);
+		// }, 100);
 	}
