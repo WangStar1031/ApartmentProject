@@ -129,8 +129,6 @@ function uploadedPhotoDraw(){
 	});
 }
 function popup(_id, _cat){
-	// debugger;
-	// return;
 	var imgPath = "";
 	if( _cat == "photo"){
 		imgPath = "container/project1/ap" + apartNo + "/project/photos/" + _id + "pi.jpg";
@@ -138,18 +136,7 @@ function popup(_id, _cat){
 		imgPath = "container/project1/ap" + apartNo + "/project/plans/" + _id + "pl.jpg";
 	}
 	$(".imgBorder img").eq(0).attr("src",imgPath);
-	if( fullWidth < 769){
-		// $(window).scrollTop(0);
-		// $(".forDesktop").remove();
-	} else{
-		// $("#project-container").scrollTop(0);
-		// $(".forMobile").remove();
-	}
 
-	// $("#project-container").scroll(function(){
-	// 	setNavTop();
-	// });
-	// $(window).scroll(function(){
 	if( $(".uploadImgWnd").is(":visible")){
 		if( prevId == _id && prevCat == _cat){
 			$(".uploadImgWnd").hide();
