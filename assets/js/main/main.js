@@ -166,12 +166,6 @@ function showImage(src, target){
 		console.log(e);
 		target.src = this.result;
 		var strHtml = "";
-			// strHtml += '<div class="uploadedImgTitle">';
-			// 	strHtml += '<img onclick="imgMinusClicked(this)" src="assets/images/minus.png">';
-			// 	strHtml += '<img onclick="imgPlusClicked(this)" src="assets/images/plus.png">';
-			// 	// strHtml += '<img onclick="imgSearchClicked(this)" src="assets/images/search.png">';
-			// 	strHtml += '<div style="clear:both;"></div>';
-			// strHtml += '</div>';
 			strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + this.result + '">';
 		$(".uploadedImgPan").html(strHtml);
 		$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
@@ -216,7 +210,6 @@ function updateArrDefect_Reparation(){
 		$("#arrDefects").html(strHtml);
 	});
 	$.post("api_process.php", {action: "getArrReparation", projectPath: "project1", apartNo: apartNo}, function(response){
-		// console.log(response);
 		var arrNodes = JSON.parse(response);
 		var strHtml = "";
 		for( var i = 0; i < arrNodes.length; i++){
@@ -227,7 +220,6 @@ function updateArrDefect_Reparation(){
 	});
 }
 function SaveImage(){
-	// var strFileType = /[^.]+$/.exec(src.files[0].name).pop();
 	var fileName = src.files[0].name;
 	var strFileType = fileName.split(".").pop();
 	var curCtrl = $(".uploadedImgPan .uploadedImg");
@@ -365,9 +357,7 @@ function SaveImage(){
 	});
 	var prevScrollTop = 0;
 	function setNavTop4Mobile(){
-		// $('#wraperr').css('position','');
 		var nScrollTop = $(document).scrollTop();
-		// var nRealTop = Math.max(nScrollTop, nTop);
 		if( nScrollTop >= nTop){
 			$('#wraperr').css('position','fixed');
 			if( prevScrollTop < nScrollTop){
@@ -381,14 +371,8 @@ function SaveImage(){
 		}
 		prevScrollTop = nScrollTop;
 		$('#wraperr').css('z-index', 1000);
-		// $('#wraperr').css('top', nRealTop);
 		$("#wraperr").css('width',$("#wraperr").parent().width());
 	}
 	$(window).scroll(function(e){
 		setNavTop4Mobile();
 	});
-	if( fullWidth < 769){
-		// setInterval(function(){
-			// setNavTop4Mobile();
-		// }, 100);
-	}

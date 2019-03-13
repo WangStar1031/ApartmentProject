@@ -13,7 +13,7 @@ if( strcasecmp($_SESSION['reparationUserName'], "admin") != 0){
 
 $dir = __DIR__ . "/container/project1/";
 $files = glob($dir . "ap*");
-// print_r($files);
+
 $count = count($files);
 require_once __DIR__ . "/libInformation.php";
 
@@ -24,11 +24,6 @@ foreach ($files as $value) {
 <head>
 	<link rel="icon" type="image/png" href="assets/images/reparation_logo.png">
 </head>
-
-<!-- <link rel="stylesheet" href="./assets/bootstrap_select/css/bootstrap-select.min.css">
-<script src="./assets/bootstrap_select/js/bootstrap-select.min.js"></script>
-<script src="./assets/bootstrap_select/js/i18n/defaults-en_US.min.js"></script>
- -->
 
 <link rel="stylesheet" type="text/css" href="./assets/css/main/admin.css?<?=time()?>">
 <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -134,7 +129,6 @@ foreach ($files as $value) {
 							</h4>
 							
 						</span>
-						<!-- <p id="txtParts" style="display: none;"></p> -->
 						<div id="proParts">
 						</div>
 					</td>
@@ -193,7 +187,6 @@ foreach ($files as $value) {
 								<th>N<u>o</u></th>
 								<th>Part Name</th>
 								<th>Image N<u>o</u></th>
-								<!-- <th>End Number</th> -->
 							</tr>
 						</table>
 						<hr>

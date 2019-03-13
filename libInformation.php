@@ -7,11 +7,6 @@ function getApartmentInfo($_aptName){
 
 }
 
-// function saveProjectInfo($_projectInfo){
-// 	$fName = __DIR__ . "/container/projectInfo.json";
-// 	file_put_contents($fName, json_encode($_projectInfo));
-// 	echo "OK";
-// }
 function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos){
 	$_retVal = new \stdClass;
 	$paDir = "container/" . $_projectName . "/uploaded/";
@@ -60,54 +55,11 @@ function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGrou
 		$_retVal->message = "OK";
 		ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $dirName . $url, $sdirName . $url, $_posRect, $_infos);
 
-		// $_retVal->fileName = $dirName . $url;
-
-		// $infFileName = $dirName . $_catPhoto . ".json";
-		// $infContents = @file_get_contents($infFileName);
-		// $jsonInf = [];
-		// if( $infContents){
-		// 	$jsonInf = json_decode($infContents);
-		// }
-		// if( $_idxGroup == -1){
-		// 	$newInf = new \stdClass;
-		// 	$newInf->groupId = count($jsonInf);
-		// 	$newInf->arrNodes = [];
-		// 	$newNode = new \stdClass;
-		// 	$newNode->fileUrl = $url;
-		// 	$newNode->info = json_decode($_infos);
-		// 	$newInf->arrNodes[] = $newNode;
-		// 	$newInf->posRect = json_decode($_posRect);
-		// 	$jsonInf[] = $newInf;
-		// 	file_put_contents($infFileName, json_encode($jsonInf));
-		// } else{
-		// 	foreach ($jsonInf as $value) {
-		// 		if( $value->groupId == $_idxGroup ){
-		// 			$newNode = new \stdClass;
-		// 			$newNode->fileUrl = $url;
-		// 			$newNode->info = json_decode($_infos);
-		// 			$value->arrNodes[] = $newNode;
-		// 			file_put_contents($infFileName, json_encode($jsonInf));
-		// 			break;
-		// 		}
-		// 	}
-		// }
 	}
 	echo json_encode($_retVal);
 }
 function GetUploadedPhotos($_projectName, $_apartNo, $_idxPhoto, $_catPhoto){
 	echo json_encode(GetUploadedPhotos_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto));
-	return;
-	// $dirName = "container/ap" . $_apartNo . "/project/uploaded/";
-	$dirName .= $_idxPhoto . "/";
-	$retVal = [];
-	$infFileName = $dirName . $_catPhoto . ".json";
-	if( file_exists($infFileName)){
-		$fContents = @file_get_contents($infFileName);
-		if( $fContents){
-			$retVal = json_decode($fContents);
-		}
-	}
-	echo json_encode($retVal);
 }
 function createNewProject($_directoryName){
 	$dirName = __DIR__ . "/container/" . $_directoryName . "/";

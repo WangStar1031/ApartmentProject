@@ -117,15 +117,6 @@ switch ($_action) {
 		if( isset($_POST['directoryName'])) $_directoryName = $_POST['directoryName'];
 		removeProject($_directoryName);
 		break;
-	// case "changeProjectName":
-	// 	$_directoryName = '';
-	// 	if( isset($_GET['directoryName'])) $_directoryName = $_GET['directoryName'];
-	// 	if( isset($_POST['directoryName'])) $_directoryName = $_POST['directoryName'];
-	// 	$_projectName = '';
-	// 	if( isset($_GET['projectName'])) $_projectName = $_GET['projectName'];
-	// 	if( isset($_POST['projectName'])) $_projectName = $_POST['projectName'];
-	// 	ChangeProjectName( $_directoryName, $_projectName);
-	// 	break;
 	case "saveProjectName":
 		$_projectPath = '';
 		if( isset($_GET['projectPath'])) $_projectPath = $_GET['projectPath'];

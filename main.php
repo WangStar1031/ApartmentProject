@@ -43,7 +43,6 @@ if( $_SESSION['reparationUserName'] == ""){
 
 	
 	<script src="assets/js/respond.min.js"></script>
-	<!-- <script src="assets/js/jquery-1.10.1.js"></script> -->
 	<script src="assets/js/topnav/modernizr.js"></script>
 
 	<script src="assets/js/jquery.min.js"></script>
@@ -116,7 +115,7 @@ $documentMonth = date("m", strtotime($documentDate));
 $documentYear = date("Y", strtotime($documentDate));
 $parts4Project = getParts($projectInfo['Id']);
 $apartmentInfo = getApratmentInfo($projectInfo['Id']);
-// print_r($apartmentInfo);
+
 if( $apartNo == 0){
 	$apartNo = str_replace("ap", "", $apartmentInfo[0]['ApartmentName']);
 }
@@ -128,10 +127,7 @@ foreach ($apartmentInfo as $value) {
 		break;;
 	}
 }
-// echo "<br>";
-// print_r($curApartment);
 $_dirID = $curApartment['ApartmentName'];
-// print_r($_dirID);
 $arrPartInfos = explode(",", $curApartment['PartInfos']);
 $sectionCount = $curApartment['SectionCount'];
 $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
@@ -329,11 +325,6 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 		
 		<div class="pagespan">
 		    <div class="wrap">
-			    <!-- <div class="scrollbar">
-				    <div class="handle">
-					    <div class="mousearea"></div>
-				    </div>
-			    </div> -->
 			    <?php
 			    $nApartCount = count($apartmentInfo);
 			    ?>
@@ -363,8 +354,6 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 								<?php
 								}
 								?>
-						       <!-- <div class="fleft horiz-bottoms" title="Ceilings"><a href="<?=$href?>#ceilins">תיקרות</a></div>
-							   <div class="fleft horiz-bottoms" title="flooring"><a href="<?=$href?>#floorings">רצפות</a></div> -->
 							</div>
 						</li>
 			    		<?php
@@ -612,13 +601,11 @@ foreach($files as $file){
 		</div>
 	</div>
 </div>
-<!-- <a name="section<?=$i?>"></a> -->
+
 <?php
 }
 ?>
 <div class="uploadImgWnd" style="display: none; max-height: 95%; overflow: auto;">
-	<!-- <div class="row">
-	</div> -->
 	<div class="imgBorder">
 		<div class="xBtn" onclick="closeUploadImgWnd()">X</div>
 		<img src="container/project1/<?=$_dirID?>/project/photos/1pi.jpg">
@@ -848,7 +835,6 @@ foreach($files as $file){
         <div class="left footer-left"><h1>054-2096602 <br> office@watchwork.net <br> <a href="http://www.watchwork.co.il" target="_blank"><b>www.watchwork.co.il</b></a></h1></div>	
 
 	    <div class="clear"></div>	
-
     </div>
 	
 </div>
@@ -929,7 +915,6 @@ if( fullWidth < 769){
 	setHrefTags4Mobile($("#arrReparation a"));
 	setHrefTags4Mobile($("#arrDefects a"));
 	var arrSectionAs = $(".popup-content-numere a");
-	// debugger;
 	for( var i = 0; i < arrSectionAs.length; i++){
 		var curA = arrSectionAs.eq(i);
 		var href = curA.attr("href");
@@ -940,7 +925,6 @@ if( fullWidth < 769){
 			curA.attr("href", "#No" + nNumber);
 		}
 	}
-	// setHrefTags4Mobile($(".popup-content-numere a"));
 } else{
 	$(".forMobile").remove();
 }
