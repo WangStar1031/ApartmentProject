@@ -7,7 +7,7 @@ function getApartmentInfo($_aptName){
 
 }
 
-function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos){
+function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos, $_Description){
 	$_retVal = new \stdClass;
 	$paDir = "container/" . $_projectName . "/uploaded/";
 	if( !file_exists($paDir)){
@@ -53,7 +53,7 @@ function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGrou
 		}
 
 		$_retVal->message = "OK";
-		ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $dirName . $url, $sdirName . $url, $_posRect, $_infos);
+		ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $dirName . $url, $sdirName . $url, $_posRect, $_infos, $_Description);
 
 	}
 	echo json_encode($_retVal);

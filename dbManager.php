@@ -252,7 +252,7 @@
 		}
 		return $arrUploads;
 	}
-	function ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $originalName, $smallName, $_posRect, $_infos){
+	function ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $originalName, $smallName, $_posRect, $_infos, $_Description){
 		global $db;
 		$projectInfo = getProjectInfo($_projectName);
 		if( $projectInfo == false)
@@ -267,9 +267,9 @@
 				$_idxGroup = $result[0]['idxGroup'] + 1;
 			}
 		}
-		$sql = "INSERT INTO defect_reparation(ProjectId, ApartmentNumber, PhotoIdx, PhotoCat, idxGroup, Type, OriginalFilePath, SmallFilePath, PosRect, Infos) VALUES(?,?,?,?,?,?,?,?,?,?)";
+		$sql = "INSERT INTO defect_reparation(ProjectId, ApartmentNumber, PhotoIdx, PhotoCat, idxGroup, Type, OriginalFilePath, SmallFilePath, PosRect, Infos, Description) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 		$stmt = $db->prepare($sql);
-		$stmt->execute([$projectId, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $originalName, $smallName, $_posRect, $_infos]);
+		$stmt->execute([$projectId, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $originalName, $smallName, $_posRect, $_infos, $_Description]);
 	}
 	function getAllNotes($_projectId, $_aptNo){
 		global $db;

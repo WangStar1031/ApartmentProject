@@ -82,7 +82,10 @@ switch ($_action) {
 		$_infos = '';
 		if( isset($_GET['infos'])) $_infos = $_GET['infos'];
 		if( isset($_POST['infos'])) $_infos = $_POST['infos'];
-		ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos);
+		$_Description = '';
+		if( isset($_GET['Description'])) $_Description = $_GET['Description'];
+		if( isset($_POST['Description'])) $_Description = $_POST['Description'];
+		ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos, $_Description);
 		break;
 	case "removeUploadedImg":
 		$_idx = '';
