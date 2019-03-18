@@ -160,14 +160,12 @@ function outUi(event, ui){
 function showImage(src, target){
 	var fr = new FileReader();
 	fr.onload = function(e) {
-		console.log(e);
-		console.log(this);
+		// debugger;
+		// console.log(e);
+		// console.log(this);
 		const img = new Image();
 		img.src = this.result;
 		img.onload = function(){
-			// console.log(e.total);
-			// console.log( img.width);
-			// console.log( img.height);
 			if( e.total >= 350000 || img.width > 1600 || img.height > 1600){
 				const elem = document.createElement('canvas');
 				var longEdge = img.width >= img.height ? img.width : img.height;
@@ -187,14 +185,10 @@ function showImage(src, target){
 				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 				$(".uploadedImgPan").draggable();
 				target.src = imgReduced;
-				// ctx.canvas.toBlob((blob) => {
-
-				// }, 'image/' + strFileType, 0.8);
-				// target.src = ctx.canvas.toDataURL(target.src, "image/" + strFileType, 1);
 			} else{
-				target.src = this.result;
+				target.src = img.src;
 				var strHtml = "";
-					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + this.result + '">';
+					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + target.src + '">';
 				$(".uploadedImgPan").html(strHtml);
 				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 				$(".uploadedImgPan").draggable();
