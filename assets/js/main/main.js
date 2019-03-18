@@ -168,10 +168,10 @@ function showImage(src, target){
 			// console.log(e.total);
 			// console.log( img.width);
 			// console.log( img.height);
-			if( e.total >= 350000 || img.width > 1200 || img.height > 1200){
+			if( e.total >= 350000 || img.width > 1600 || img.height > 1600){
 				const elem = document.createElement('canvas');
 				var longEdge = img.width >= img.height ? img.width : img.height;
-				var fRate = longEdge / 1200;
+				var fRate = longEdge / 1600;
 				elem.width = img.width / fRate;
 				elem.height = img.height / fRate;
 				const ctx = elem.getContext('2d');
@@ -180,7 +180,7 @@ function showImage(src, target){
 				// var strFileType = fileName.split(".").pop();
 				var strFileType = base64MimeType(img.src).split("/").pop();
 				console.log(strFileType);
-				var imgReduced = elem.toDataURL("image/" + strFileType, 0.8);
+				var imgReduced = elem.toDataURL("image/" + strFileType, 0.7);
 				var strHtml = "";
 					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + imgReduced + '">';
 				$(".uploadedImgPan").html(strHtml);
