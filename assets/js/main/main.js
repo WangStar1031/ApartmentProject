@@ -176,13 +176,17 @@ function showImage(src, target){
 				elem.height = img.height / fRate;
 				const ctx = elem.getContext('2d');
 				ctx.drawImage(img, 0, 0, elem.width, elem.height);
-				var fileName = src.files[0].name;
-				var strFileType = fileName.split(".").pop();
+				// var fileName = src.files[0].name;
+				// var strFileType = fileName.split(".").pop();
+				var strFileType = base64MimeType(img.src).split("/").pop();
+				console.log(strFileType);
+				var imgReduced = elem.toDataURL("image/" + strFileType, 0.8);
 				var strHtml = "";
-					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + elem.toDataURL("image/" + strFileType, 0.8) + '">';
+					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + imgReduced + '">';
 				$(".uploadedImgPan").html(strHtml);
 				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 				$(".uploadedImgPan").draggable();
+				target.src = imgReduced;
 				// ctx.canvas.toBlob((blob) => {
 
 				// }, 'image/' + strFileType, 0.8);
@@ -245,11 +249,27 @@ function updateArrDefect_Reparation(){
 		$("#arrReparation").html(strHtml);
 	});
 }
+function base64MimeType(encoded) {
+  var result = null;
+
+  if (typeof encoded !== 'string') {
+    return result;
+  }
+
+  var mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+  if (mime && mime.length) {
+    result = mime[1];
+  }
+
+  return result;
+}
 function SaveImage(){
-	var fileName = src.files[0].name;
-	var strFileType = fileName.split(".").pop();
+	// var fileName = src.files[0].name;
+	// var strFileType = fileName.split(".").pop();
 	var curCtrl = $(".uploadedImgPan .uploadedImg");
 	var srcImg = curCtrl.attr("src");
+	var strFileType = base64MimeType(srcImg).split("/").pop();
 	var idxGroup = -1;
 	if( curCtrl.attr("groupId")){
 		idxGroup = parseInt(curCtrl.attr("groupId"));

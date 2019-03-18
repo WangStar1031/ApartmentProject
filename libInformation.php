@@ -7,7 +7,7 @@ function getApartmentInfo($_aptName){
 
 }
 
-function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos, $_Description){
+function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $_strFileType, $_imgSrc, $_posRect, $_infos){
 	$_retVal = new \stdClass;
 	$paDir = "container/" . $_projectName . "/uploaded/";
 	if( !file_exists($paDir)){
@@ -36,7 +36,7 @@ function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGrou
 		switch($_strFileType){
 			case 'bmp': $src = imagecreatefromwbmp($fName); break;
 			case 'gif': $src = imagecreatefromgif($fName); break;
-			case 'jpg': $src = imagecreatefromjpeg($fName); break;
+			case 'jpg':case 'jpeg': $src = imagecreatefromjpeg($fName); break;
 			case 'png': $src = imagecreatefrompng($fName); break;
 			default : $src = false; break;
 		}
@@ -47,13 +47,13 @@ function ImageUpload($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGrou
 		switch($_strFileType){
 			case 'bmp': $retVal = imagewbmp( $_imgDst, $dstImgPath); break;
 			case 'gif': $retVal = imagegif( $_imgDst, $dstImgPath); break;
-			case 'jpg': $retVal = imagejpeg( $_imgDst, $dstImgPath); break;
+			case 'jpg': case 'jpeg': $retVal = imagejpeg( $_imgDst, $dstImgPath); break;
 			case 'png': $retVal = imagepng( $_imgDst, $dstImgPath); break;
 			default : $retVal = false; break;
 		}
 
 		$_retVal->message = "OK";
-		ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $dirName . $url, $sdirName . $url, $_posRect, $_infos, $_Description);
+		ImageUpload_DB($_projectName, $_apartNo, $_idxPhoto, $_catPhoto, $_idxGroup, $_Type, $dirName . $url, $sdirName . $url, $_posRect, $_infos);
 
 	}
 	echo json_encode($_retVal);
