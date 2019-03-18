@@ -422,6 +422,7 @@ $arrSectionInfos = explode(",", $curApartment['SectionInfos']);
 			            					<div class="row" id="arrDefects">
 												<?php
 												$arrDefects = getAllDefects( $projectInfo['Id'], $apartNo);
+												// print_r($arrDefects);
 												foreach ($arrDefects as $value) {
 													$idx = $value['PhotoIdx'];
 												?>

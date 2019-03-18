@@ -45,7 +45,7 @@ function countClicked(_i){
 							strHtml += '</tr>';
 							strHtml += '<tr>';
 								strHtml += '<td colspan="3">';
-									strHtml += '<textarea style="width:100%;" value="' + curNode.info.Description + '" placeholder="Description" readonly></textarea>';
+									strHtml += '<textarea style="width:100%;"  placeholder="Description" readonly>' + curNode.info.Description + '</textarea>';
 								strHtml += '</td>';
 							strHtml += '</tr>';
 						strHtml += '</table>';
@@ -149,14 +149,11 @@ function popup(_id, _cat){
 	uploadedPhotoDraw();
 }
 function droppedUi(event, ui){
-	console.log(event);
-	console.log(ui);
 	var target = event.target;
 	var groupId = target.getAttribute("groupid");
 	$(".uploadedImg").attr("groupId", groupId);
 }
 function outUi(event, ui){
-	console.log(ui);
 	var curEle = event.toElement;
 	curEle.setAttribute("groupId", "");
 }
@@ -164,12 +161,41 @@ function showImage(src, target){
 	var fr = new FileReader();
 	fr.onload = function(e) {
 		console.log(e);
-		target.src = this.result;
-		var strHtml = "";
-			strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + this.result + '">';
-		$(".uploadedImgPan").html(strHtml);
-		$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
-		$(".uploadedImgPan").draggable(); 
+		console.log(this);
+		const img = new Image();
+		img.src = this.result;
+		img.onload = function(){
+			// console.log(e.total);
+			// console.log( img.width);
+			// console.log( img.height);
+			if( e.total >= 350000 || img.width > 1200 || img.height > 1200){
+				const elem = document.createElement('canvas');
+				var longEdge = img.width >= img.height ? img.width : img.height;
+				var fRate = longEdge / 1200;
+				elem.width = img.width / fRate;
+				elem.height = img.height / fRate;
+				const ctx = elem.getContext('2d');
+				ctx.drawImage(img, 0, 0, elem.width, elem.height);
+				var fileName = src.files[0].name;
+				var strFileType = fileName.split(".").pop();
+				var strHtml = "";
+					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + elem.toDataURL("image/" + strFileType, 0.8) + '">';
+				$(".uploadedImgPan").html(strHtml);
+				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
+				$(".uploadedImgPan").draggable();
+				// ctx.canvas.toBlob((blob) => {
+
+				// }, 'image/' + strFileType, 0.8);
+				// target.src = ctx.canvas.toDataURL(target.src, "image/" + strFileType, 1);
+			} else{
+				target.src = this.result;
+				var strHtml = "";
+					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + this.result + '">';
+				$(".uploadedImgPan").html(strHtml);
+				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
+				$(".uploadedImgPan").draggable();
+			}
+		}
 	};
 	src.addEventListener("change", function(){
 		var lastModifiedDate = src.files[0].lastModifiedDate;
