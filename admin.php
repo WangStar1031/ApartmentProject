@@ -60,12 +60,20 @@ foreach ($files as $value) {
 							</tr>
 							<tr>
 								<td><label for="projectType">Project Type:</label></td>
-								<td>
+								<!-- <td>
 									<select id="projectType" class="form-control">
 										<option class="Public">Public</option>
 										<option class="Commercial">Commercial</option>
 										<option class="Office">Office</option>
 										<option class="Residential">Residential</option>
+									</select>
+								</td> -->
+								<td>
+									<select id="projectType" class="form-control">
+										<option class="Public">מסחריים</option>
+										<option class="Commercial">משרדים</option>
+										<option class="Office">תמ"א 38</option>
+										<option class="Residential">מגורים</option>
 									</select>
 								</td>
 								<td><label>Constructor : </label></td>

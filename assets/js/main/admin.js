@@ -151,7 +151,15 @@ function getProjectInfo(){
 			console.log(projectInfo);
 			$("#projectName").val(projectInfo.ProjectName);
 			$("#projectNumber").val(projectInfo.ProjectNumber);
-			$("#projectType ." + projectInfo.ProjectType).prop("selected", true);
+			var arrOptions = $("#projectType option");
+			for( var i = 0; i < arrOptions.length; i++){
+				var curOption = arrOptions.eq(i);
+				if( curOption.val() == projectInfo.ProjectType){
+					curOption.prop("selected", true);
+					break;
+				}
+			}
+			// $("#projectType ." + projectInfo.ProjectType).prop("selected", true);
 			$("#zone").val(projectInfo.Zone);
 			$("#city").val(projectInfo.City);
 			$("#street").val(projectInfo.Street);
@@ -162,6 +170,7 @@ function getProjectInfo(){
 			$("#photography").val(projectInfo.Photography);
 			$("#buildingnumber").val(projectInfo.BuildingNumber);
 			$("#entrancenumber").val(projectInfo.EntranceNumber);
+			$("#documentdate").val(projectInfo.DocumentDate);
 			var projectId = projectInfo.Id;
 			$.post("api_process.php", {action: "getParts", projectId: projectId}, function(data){
 				if( data != "false"){
