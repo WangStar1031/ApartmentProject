@@ -166,7 +166,7 @@ function showImage(src, target){
 		const img = new Image();
 		img.src = this.result;
 		img.onload = function(){
-			if( e.total >= 350000 || img.width > 1600 || img.height > 1600){
+			if(( e.total >= 350000 || img.width > 1600 || img.height > 1600) && (fullWidth < 769)){
 				const elem = document.createElement('canvas');
 				var longEdge = img.width >= img.height ? img.width : img.height;
 				var fRate = longEdge / 1600;
@@ -180,7 +180,7 @@ function showImage(src, target){
 				console.log(strFileType);
 				var imgReduced = elem.toDataURL("image/" + strFileType, 0.7);
 				var strHtml = "";
-					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + imgReduced + '">';
+					strHtml += '<img class="uploadedImg" style="width:60px; height:60px;" src="' + imgReduced + '">';
 				$(".uploadedImgPan").html(strHtml);
 				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 				$(".uploadedImgPan").draggable();
@@ -188,7 +188,11 @@ function showImage(src, target){
 			} else{
 				target.src = img.src;
 				var strHtml = "";
+				if( fullWidth < 769 ){
+					strHtml += '<img class="uploadedImg" style="width:60px; height:60px;" src="' + target.src + '">';
+				} else{
 					strHtml += '<img class="uploadedImg" style="width:74px; height:74px;" src="' + target.src + '">';
+				}
 				$(".uploadedImgPan").html(strHtml);
 				$(".uploadedImgPan").css({"top":"10px", "left":"10px"});
 				$(".uploadedImgPan").draggable();
