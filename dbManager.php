@@ -1,6 +1,7 @@
 <?php
 	require_once __DIR__ . '/library/Mysql.php';
-	
+	require_once __DIR__ . '/library/sendMail.php';
+
 	$db = new Mysql();
 	$db->exec("set names utf8");
 	function getApartmentInfo_DB($_aptName){
@@ -334,29 +335,7 @@
 			$sql = "INSERT INTO user(UserEmail, InviteUrl) VALUES(?,?)";
 			$stmt = $db->prepare($sql);
 			$stmt->execute([$_UserEmail, $key]);
-			
-			$to = $_UserEmail;
-			$subject = "Welcome!";
-			$txt = "Hello, there.\n I invites ";
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-			// $headers = "From: webmaster@example.com";
-			$message = "
-			<html>
-			<head>
-			<title>Invitation.</title>
-			</head>
-			<body>
-			<h4>Hello, there.</h4>
-			<p>We invite you to our building reparation system.</p>
-			<p>Please click bellow link url.</p>
-			<a href='http://www.watchwork.co.il/UploadsProjectUser1/invitation.php?key=" . $key . "'>click me</a>
-			</body>
-			</html>
-			";
-
-			mail($to,$subject,$message,$headers);
-			echo "Sent";
+			sendMail($_UserEmail, $key);
 		} else{
 			$row = $result[0];
 			if( $row['InviteUrl'] != NULL){
